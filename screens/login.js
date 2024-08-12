@@ -5,7 +5,7 @@ import styles from "./style";
 const LOGIN = ({navigation}) =>{
     return(
         <View>
-            <Text>Olá </Text>
+            <Text>Olá oi</Text>
         </View>
     )
 };
