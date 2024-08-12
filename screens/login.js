@@ -4,7 +4,7 @@ import { View,Text } from "react-native";
 const LOGIN = ({navigation}) =>{
     return(
         <View>
-            <Text>Olá </Text>
+            <Text>Olá amigos</Text>
         </View>
     )
 };
