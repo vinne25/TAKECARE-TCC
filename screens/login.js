@@ -6,10 +6,6 @@ const LOGIN = ({navigation}) =>{
     return(
         <View>
             <Text>Olá </Text>
-        <TouchableOpacity
-        onPress={() => navigation.navigate('pesquisar')}>
-        <Text>Continuar</Text>
-        </TouchableOpacity>
         </View>
     )
 };
