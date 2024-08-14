@@ -1,18 +1,16 @@
-import { View, Text, StyleSheet, Image , TouchableOpacity, Animatable} from "react-native"
+import { View, Text, StyleSheet, Image , TouchableOpacity, TextInput} from "react-native"
+
 const Login = ({navigation}) =>{
     return (
         <View style={styles.container}>
             <Image
             source={require('../../TAKECARE-TCC/screens/Imagens/Login.png')}
-            style={{ width: '100%', height: '100%', opacity: 0.8, }}
-            />
-            <Animatable.Image
-            animation="fadeInUp"
+            style={{ width: '100%', height: '100%', opacity: 0.8, }}/>
+            <View
             source={require('../../TAKECARE-TCC/screens/Imagens/logo baba preta.png')}
             style={{ width: '100%', position:'absolute', }}
-            resizeMode="contain"
-            />
-            <Animatable.View animation="fadeInUp" style={styles.quadrado}>
+            resizeMode="contain"/>
+            <View>
             <Text style={styles.login}> Login </Text>
             <Text style={styles.emailesenha}>E-mail</Text>
             <TextInput 
@@ -24,14 +22,14 @@ const Login = ({navigation}) =>{
             placeholder="Digite sua Senha"
             storeData
             />
-           <Text style={styles.esqueceu}> Ainda não possui um login?</Text>
-           <TouchableOpacity style={styles.cadastro}>
+        <Text style={styles.esqueceu}> Ainda não possui um login?</Text>
+        <TouchableOpacity style={styles.cadastro}>
             <Text style={styles.cadastrese} onPress={ () => navigation.navigate('Signin')}> Cadastre-se </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.botaum}>
             <Text style={styles.textobotaum}> Entrar </Text>
             </TouchableOpacity>
-            </Animatable.View>           
+            </View>          
         </View>
     );
 }
