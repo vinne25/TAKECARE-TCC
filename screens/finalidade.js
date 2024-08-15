@@ -12,13 +12,13 @@ const Finalidade = ({navigation}) => {
     return (
         <View style={styles.container}>
         <Image
-        source={require('../../TAKECARE-TCC/screens/Imagens/imagem de fundo.png')}
+        source={require('../assets/imagem_de_fundo.png')}
         style={{ width: '100%', height: '100%', opacity: 0.8}}
         />
         <Text style={styles.finalidade}> PARA QUAL FINALIDADE {"\n"} PRETENDE UTILIZAR {"\n"} ESTE APLICATIVO? </Text>
         <TouchableOpacity style={styles.botaumtrabalhador} onPress={ () => navigation.navigate('Telababa')}>
             <Image
-            source={require('../../TAKECARE-TCC/screens/Imagens/mother.png')}
+            source={require('../assets/mother.png')}
             style={{ width: '100%', height: '70%', top: 10}}
             resizeMode="contain"
             />
@@ -26,7 +26,7 @@ const Finalidade = ({navigation}) => {
         </TouchableOpacity>
         <TouchableOpacity style={styles.botaumcliente} onPress={ () => navigation.navigate('Telacliente')}>
             <Image 
-            source={require('../../TAKECARE-TCC/screens/Imagens/mother.png')}
+            source={require('../assets/mother.png')}
             style={{ width: '100%',height: '70%' }}
             resizeMode="contain"
             />

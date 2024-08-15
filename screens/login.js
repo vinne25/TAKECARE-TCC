@@ -5,12 +5,12 @@ const Login = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <Image
-                source={require('../../TAKECARE-TCC/screens/Imagens/Login.png')}
-                style={{ width: '100%', height: '100%', opacity: 0.8 }}
+                source={require('../assets/imagem_de_fundo.png')}
+                style={{ width: '100%', height: '100%', opacity: 1.8 }}
             />
             <Animatable.Image
                 animation="fadeInUp"
-                source={require('../../TAKECARE-TCC/screens/Imagens/logo baba preta.png')}
+                source={require('../assets/logo baba preta.png')}
                 style={{ width: '100%', position: 'absolute' }}
                 resizeMode="contain"
             />
@@ -33,7 +33,7 @@ const Login = ({ navigation }) => {
                         style={styles.cadastrese} 
                         onPress={() => navigation.navigate('Signin')}
                     > 
-                        Cadastre-se 
+Cadastre-se 
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.botaum}>
