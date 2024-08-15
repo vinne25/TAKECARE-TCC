@@ -16,7 +16,7 @@ const Finalidade = ({navigation}) => {
         style={{ width: '100%', height: '100%', opacity: 0.8}}
         />
         <Text style={styles.finalidade}> PARA QUAL FINALIDADE {"\n"} PRETENDE UTILIZAR {"\n"} ESTE APLICATIVO? </Text>
-        <TouchableOpacity style={styles.botaumtrabalhador} onPress={ () => navigation.navigate('Telababa')}>
+        <TouchableOpacity style={styles.botaumtrabalhador} onPress={ () => navigation.navigate('Trabalho')}>
             <Image
             source={require('../assets/mother.png')}
             style={{ width: '100%', height: '70%', top: 10}}
@@ -24,7 +24,7 @@ const Finalidade = ({navigation}) => {
             />
             <Text style={styles.textotrabalhador}> Trabalho </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.botaumcliente} onPress={ () => navigation.navigate('Telacliente')}>
+        <TouchableOpacity style={styles.botaumcliente} onPress={ () => navigation.navigate()}>
             <Image 
             source={require('../assets/mother.png')}
             style={{ width: '100%',height: '70%' }}

@@ -8,6 +8,7 @@ import conexoes from './screens/Conexoes';
 import pesquisar from './screens/pesquisar';
 import Login from './screens/login';
 import Finalidade from './screens/finalidade';
+import Trabalho from './screens/Trabalho'
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ const App = () =>  {
                 <Stack.Screen name="pesquisar" component={pesquisar} />
                 <Stack.Screen name='login' component={Login} />
                 <Stack.Screen name='finalidade' component={Finalidade} />
+                <Stack.Screen name='Trabalho' component={Trabalho}/>
             </Stack.Navigator>
         </NavigationContainer>
     );
