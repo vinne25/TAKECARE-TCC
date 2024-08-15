@@ -31,7 +31,7 @@ const Login = ({ navigation }) => {
                 <TouchableOpacity style={styles.cadastro}>
                     <Text 
                         style={styles.cadastrese} 
-                        onPress={() => navigation.navigate('Signin')}
+                        onPress={() => navigation.navigate('finalidade')}
                     > 
                         Cadastre-se 
                     </Text>
