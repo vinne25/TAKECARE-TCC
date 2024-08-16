@@ -55,7 +55,7 @@ import {
             <TouchableOpacity style={styles.botaoavanço} onPress={ () => navigation.navigate('Cadastrotrabalho')}>
             <Text style={styles.avanço}> Avançar </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.botaovoltar} onPress={ () => navigation.navigate('Signin')}>
+            <TouchableOpacity style={styles.botaovoltar} onPress={ () => navigation.navigate('finalidade')}>
             <Text style={styles.voltar}> Voltar </Text>
             </TouchableOpacity>
             </ScrollView>
