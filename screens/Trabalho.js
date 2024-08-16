@@ -15,6 +15,10 @@ import {
 
     return(
         <ScrollView style={styles.scrow}>
+            <Image style={styles.img}
+            source={require('../assets/logotk.png')}
+            resizeMode="contain"
+            />
             <Text style={styles.textocadastro}> Dados Pessoais </Text>
             <Text style={styles.textoemail}> Escreva seu Nome Completo: </Text>
             <TextInput style={styles.inputemail} 
@@ -71,11 +75,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
 
+    img:{
+        width: '100%',
+        height: '20%'
+    },
+
     scrow:{
         width: '100%',
-        height: '100%',
-        bottom: 20,
-        backgroundColor: 'cyan',
+        backgroundColor: '#6633FF',
     },
     
     textocadastro:{
@@ -98,7 +105,6 @@ const styles = StyleSheet.create({
     },
 
     inputidade:{
-        backgroundColor: "white",
         borderRadius: 10,
         width: '36%', 
         paddingVertical: 5,
@@ -109,31 +115,29 @@ const styles = StyleSheet.create({
     },
 
     textogenero:{
-        position:'absolute',
+        position: 'absolute',
         fontSize:15,
         paddingStart:18,
         fontWeight:'bold',
         marginBottom: 10,
-        bottom: 675,
+        bottom: 500,
         right: 25,
         color: 'black'
     },
 
     inputgenero:{
         position: 'absolute',
-        backgroundColor: "white",
         borderRadius: 10,
         width: '38%', 
         paddingVertical: 5,
         paddingStart: 8,
         borderWidth: 1,
         borderColor: 'black',
-        bottom: 638,
+        bottom: 460,
         right: 20,
     },
 
     inputemail:{
-        backgroundColor: "white",
         borderRadius: 10,
         width: '90%', 
         paddingVertical: 5,
@@ -206,7 +210,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         marginLeft: 20,
         borderRadius: 10,
-        bottom:0,
+        bottom:-100,
     }
 })
 
