@@ -27,6 +27,7 @@ import {
             />
             <Text style={styles.textogenero}> Qual seu Gênero: </Text> 
             <TextInput style={styles.inputgenero}
+            placeholder="Gênero"
             />
             <Text style={styles.textoemail}> Digite seu RG: </Text> 
             <TextInput style={styles.inputemail}
@@ -47,10 +48,12 @@ import {
             <Text style={styles.textoemail}> Digite uma Senha: </Text> 
             <TextInput style={styles.inputemail}
             placeholder="Senha"
+            secureTextEntry
             />
             <Text style={styles.textosenha}> Confirme sua Senha: </Text> 
             <TextInput style={styles.inputsenha}
             placeholder="Confirmar"
+            secureTextEntry
             />
             <TouchableOpacity style={styles.botaoavanço} onPress={ () => navigation.navigate('Cadastrotrabalho')}>
             <Text style={styles.avanço}> Avançar </Text>
