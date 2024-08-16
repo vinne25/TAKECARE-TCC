@@ -14,8 +14,7 @@ import {
     const Trabalho = ({navigation}) => {
 
     return(
-        <SafeAreaView style={styles.container}>
-            <ScrollView style={styles.scrow}>
+        <ScrollView style={styles.scrow}>
             <Text style={styles.textocadastro}> Dados Pessoais </Text>
             <Text style={styles.textoemail}> Escreva seu Nome Completo: </Text>
             <TextInput style={styles.inputemail} 
@@ -61,8 +60,7 @@ import {
             <TouchableOpacity style={styles.botaovoltar} onPress={ () => navigation.navigate('finalidade')}>
             <Text style={styles.voltar}> Voltar </Text>
             </TouchableOpacity>
-            </ScrollView>
-        </SafeAreaView>
+        </ScrollView>
     )
 }
 
@@ -74,20 +72,10 @@ const styles = StyleSheet.create({
     },
 
     scrow:{
-        borderWidth:1,
-        position:'absolute',
-        width: '95%',
-        height: '80%',
+        width: '100%',
+        height: '100%',
         bottom: 20,
-        backgroundColor: 'white',
-        borderRadius: 10,
-    },
-
-    logo:{
-        position: 'absolute',
-        top: 10,
-        height:'20%',
-        resizeMode:'contain',
+        backgroundColor: 'cyan',
     },
     
     textocadastro:{
@@ -95,7 +83,8 @@ const styles = StyleSheet.create({
         fontWeight:'bold',
         fontSize: 23,
         alignSelf: 'center',
-        marginTop: 20
+        marginTop: 20,
+        color: 'black',
     },
 
     textoidade:{
@@ -105,6 +94,7 @@ const styles = StyleSheet.create({
         paddingStart:18,
         fontWeight:'bold',
         marginBottom: 10,
+        color: 'black',
     },
 
     inputidade:{
@@ -126,6 +116,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         bottom: 675,
         right: 25,
+        color: 'black'
     },
 
     inputgenero:{
@@ -159,6 +150,7 @@ const styles = StyleSheet.create({
         paddingStart:18,
         fontWeight:'bold',
         marginBottom: 10,
+        color: 'black'
     },
 
     textosenha:{
@@ -168,6 +160,7 @@ const styles = StyleSheet.create({
         paddingStart:18,
         fontWeight:'bold',
         marginBottom: 10, 
+        color:  'black',
     },
 
     inputsenha:{
@@ -184,11 +177,12 @@ const styles = StyleSheet.create({
 
     avanço:{
         alignSelf:'center',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: 'black',
     },
 
     botaoavanço:{
-        backgroundColor: 'cyan',
+        backgroundColor: 'red',
         width: '30%',
         alignSelf:'flex-end',
         paddingVertical: 5,
@@ -200,6 +194,7 @@ const styles = StyleSheet.create({
     voltar:{
         alignSelf: 'center',
         fontWeight: 'bold',
+        color: 'black',
     },
 
     botaovoltar:{
