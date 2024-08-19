@@ -9,8 +9,6 @@ import {
     TouchableOpacity,
 } from 'react-native'
 
-//import AsyncStorage from "@react-native-async-storage/async-storage";
-
     const Trabalho = ({navigation}) => {
 
     return(
@@ -76,8 +74,9 @@ const styles = StyleSheet.create({
     },
 
     img:{
-        width: '100%',
-        height: '20%'
+        width: 100,
+        height: 100,
+        alignSelf: 'center',
     },
 
     scrow:{

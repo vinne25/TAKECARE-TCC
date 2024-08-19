@@ -10,8 +10,8 @@ const Login = ({ navigation }) => {
             />
             <Animatable.Image
                 animation="fadeInUp"
-                source={require('../assets/logo baba preta.png')}
-                style={{ width: '100%', position: 'absolute' }}
+                source={require('../assets/logotk.png')}
+                style={{ width: 100, position: 'absolute', }}
                 resizeMode="contain"
             />
             <Animatable.View animation="fadeInUp" style={styles.quadrado}>
