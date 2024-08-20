@@ -50,15 +50,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     quadrado: {
-        position: 'absolute',
-        borderWidth: 1,
         width: '75%',
         borderRadius: 10,
         alignItems: 'center',
-        marginTop: 25,
         paddingVertical: 80,
         backgroundColor: 'white',
-        bottom: 150,
+        opacity: 100,
+        bottom: 550,
     },
     login: {
         position: 'absolute',
@@ -79,7 +77,7 @@ const styles = StyleSheet.create({
         width: '90%', 
         paddingVertical: 5,
         paddingStart: 8,
-        borderWidth: 1,
+        borderBottomWidth: 1,
         borderColor: 'black',
     },
     senhainput: {
@@ -88,7 +86,7 @@ const styles = StyleSheet.create({
         width: '90%', 
         paddingVertical: 5,
         paddingStart: 8,
-        borderWidth: 1,
+        borderBottomWidth: 1,
         borderColor: 'black',
     },
     esqueceu: {
