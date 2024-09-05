@@ -6,6 +6,7 @@ import {
     TextInput,
     ScrollView,
     SafeAreaView,
+    StatusBar,
     TouchableOpacity,
 } from 'react-native'
 
@@ -14,6 +15,7 @@ import {
     const TelaCad = ({navigation}) => {
 
     return(
+        <SafeAreaView style={styles.container}>
         <ScrollView style={styles.scrow}>
             <Image style={styles.img}
             source={require('../../Imagens/logotk.png')}
@@ -61,18 +63,17 @@ import {
             <TouchableOpacity style={styles.botaoavanço} onPress={ () => navigation.navigate('Cadastrotrabalho')}>
             <Text style={styles.avanço}> Avançar </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.botaovoltar} onPress={ () => navigation.navigate('finalidade')}>
+            <TouchableOpacity style={styles.botaovoltar} onPress={ () => navigation.navigate('Fianlidades')}>
             <Text style={styles.voltar}> Voltar </Text>
             </TouchableOpacity>
         </ScrollView>
+        </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        alignItems: 'center',
-        justifyContent: 'center',
     },
 
     img:{
@@ -81,8 +82,7 @@ const styles = StyleSheet.create({
     },
 
     scrow:{
-        width: '100%',
-        backgroundColor: '#6633FF',
+        backgroundColor: '#F4f4f4',
     },
     
     textocadastro:{
