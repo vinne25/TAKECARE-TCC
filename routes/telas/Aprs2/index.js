@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { View,Image,TouchableOpacity,StyleSheet, Text} from 'react-native';
-import styles from './style';
+import styles from '../$tyles';
 
-const Conexoes = ({navigation}) => {
+const Aprs2 = ({navigation}) => {
     return (
       <View style={styles.container}>
         <Image
           style={styles.img}
-          source={require('../assets/logotk.png')}
+          source={require('../../Imagens/logotk.png')}
           resizeMode="contain"
         />
         <Text style={styles.texto}>Conexões</Text>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('Seguranca')}>
+          onPress={() => navigation.navigate('Aprs3')}>
           <Text style={styles.buttonText}>Continuar</Text>
         </TouchableOpacity>
       </View>
     );
 };
 
-export default Conexoes;
+export default Aprs2;

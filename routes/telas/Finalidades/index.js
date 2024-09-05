@@ -8,17 +8,17 @@ import {
     TouchableOpacity, 
 } from 'react-native'
 
-const Finalidade = ({navigation}) => {
+const Finalidades = ({navigation}) => {
     return (
         <View style={styles.container}>
         <Image
-        source={require('../assets/imagem_de_fundo.png')}
+        source={require('../../Imagens/imagem_de_fundo.png')}
         style={{ width: '100%', height: '100%', opacity: 0.8}}
         />
         <Text style={styles.finalidade}> PARA QUAL FINALIDADE {"\n"} PRETENDE UTILIZAR {"\n"} ESTE APLICATIVO? </Text>
-        <TouchableOpacity style={styles.botaumtrabalhador} onPress={ () => navigation.navigate('Trabalho')}>
+        <TouchableOpacity style={styles.botaumtrabalhador} onPress={ () => navigation.navigate('TelaCad')}>
             <Image
-            source={require('../assets/mother.png')}
+            source={require('../../Imagens/mother.png')}
             style={{ width: '100%', height: '70%', top: 10}}
             resizeMode="contain"
             />
@@ -26,7 +26,7 @@ const Finalidade = ({navigation}) => {
         </TouchableOpacity>
         <TouchableOpacity style={styles.botaumcliente} onPress={ () => navigation.navigate()}>
             <Image 
-            source={require('../assets/mother.png')}
+            source={require('../../Imagens/mother.png')}
             style={{ width: '100%',height: '70%' }}
             resizeMode="contain"
             />
@@ -83,4 +83,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Finalidade
+export default Finalidades;

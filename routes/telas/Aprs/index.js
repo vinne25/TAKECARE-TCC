@@ -1,12 +1,12 @@
 import { View, TouchableOpacity, Image, Text, StyleSheet} from 'react-native';
-import styles from './style';
+import styles from '../$tyles';
 
-const Pesquisar = ({ navigation }) => {
+const Aprs = ({ navigation }) => {
     return (
       <View style={styles.container}>
         <Image
           style={styles.img}
-          source={require('../assets/logotk.png')}
+          source={require('../../Imagens/logotk.png')}
           resizeMode="contain"
         />
         <Text style={styles.texto}>Pesquisar</Text>
@@ -34,11 +34,11 @@ const Pesquisar = ({ navigation }) => {
         </View>
         <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('Conexões')}>
+        onPress={() => navigation.navigate('Aprs2')}>
         <Text style={styles.buttonText}>Continuar</Text>
         </TouchableOpacity>
       </View>
     );
 };
 
-export default Pesquisar;
+export default Aprs;

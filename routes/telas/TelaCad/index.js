@@ -11,12 +11,12 @@ import {
 
 //import AsyncStorage from "@react-native-async-storage/async-storage";
 
-    const Trabalho = ({navigation}) => {
+    const TelaCad = ({navigation}) => {
 
     return(
         <ScrollView style={styles.scrow}>
             <Image style={styles.img}
-            source={require('../assets/logotk.png')}
+            source={require('../../Imagens/logotk.png')}
             resizeMode="contain"
             />
             <Text style={styles.textocadastro}> Dados Pessoais </Text>
@@ -214,4 +214,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Trabalho;
+export default TelaCad;

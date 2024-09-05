@@ -1,16 +1,16 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput } from "react-native";
 import * as Animatable from 'react-native-animatable';
 
-const Login = ({ navigation }) => {
+const Entrar = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <Image
-                source={require('../assets/imagem_de_fundo.png')}
+                source={require('../../Imagens/imagem_de_fundo.png')}
                 style={{ width: '100%', height: '100%', opacity: 1.8 }}
             />
             <Animatable.Image
                 animation="fadeInUp"
-                source={require('../assets/logo baba preta.png')}
+                source={require('../../Imagens/logotk.png')}
                 style={{ width: '100%', position: 'absolute' }}
                 resizeMode="contain"
             />
@@ -31,7 +31,7 @@ const Login = ({ navigation }) => {
                 <TouchableOpacity style={styles.cadastro}>
                     <Text 
                         style={styles.cadastrese} 
-                        onPress={() => navigation.navigate('finalidade')}
+                        onPress={() => navigation.navigate('Finalidades')}
                     > 
 Cadastre-se 
                     </Text>
@@ -115,4 +115,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Login;
+export default Entrar;
