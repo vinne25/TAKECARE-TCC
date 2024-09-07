@@ -1,21 +1,27 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { Text, View, TouchableOpacity, StyleSheet, TextInput } from "react-native";
-import auth from '@react-native-firebase/auth';
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 
 const Login = ({navigation}) =>{
     
         const [email, setEmail] = useState('');
         const [password, setPassword] = useState('');
 
-        function signUp(){
-            auth().createUserWithEmailAndPassword(email,password);
+
+        function signIn(){
+            auth().signInWithEmailAndPassword(email,password)
+            .then(() => console.log('usuário logado!'))
+            .catch(error => console.log(error));
         }
     
         return(
         <View style={styles.conteiner}>
             <Text>Login</Text>
-            <TextInput style={styles.textinput} placeholder="Email:" value="email" onChangeText={setEmail}></TextInput>
-            <TextInput style={styles.textinput} placeholder="Senha:" value="password" onChangeText={setPassword}></TextInput>
+            <TextInput style={styles.textinput} placeholder="Email:" onChangeText={setEmail}></TextInput>
+            <TextInput style={styles.textinput} placeholder="Senha:" onChangeText={setPassword}></TextInput>
+            <TouchableOpacity onPress={signIn}>
+                <Text>Login</Text>
+            </TouchableOpacity>
 
             <TouchableOpacity onPress={() => navigation.navigate('TabRoutes')}>
                 <Text>Login</Text>
