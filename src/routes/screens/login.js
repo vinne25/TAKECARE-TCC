@@ -10,7 +10,9 @@ const Login = ({navigation}) =>{
 
         function signIn(){
             auth().signInWithEmailAndPassword(email,password)
-            .then(() => console.log('usuário logado!'))
+            .then(() => {
+                navigation.navigate('TabRoutes')
+                console.log('usuário logado!')})
             .catch(error => console.log(error));
         }
     
@@ -20,10 +22,6 @@ const Login = ({navigation}) =>{
             <TextInput style={styles.textinput} placeholder="Email:" onChangeText={setEmail}></TextInput>
             <TextInput style={styles.textinput} placeholder="Senha:" onChangeText={setPassword}></TextInput>
             <TouchableOpacity onPress={signIn}>
-                <Text>Login</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => navigation.navigate('TabRoutes')}>
                 <Text>Login</Text>
             </TouchableOpacity>
         </View>

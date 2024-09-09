@@ -1,6 +1,6 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Login from './screens/Mapa';
-import Register from './screens/Favoritos';
+import Mapa from './screens/Mapa';
+import Favoritos from './screens/Favoritos';
 import { Feather } from 'react-native-feather';
 
 const Tab = createBottomTabNavigator();
@@ -8,8 +8,8 @@ const Tab = createBottomTabNavigator();
 const TabRoutes = () => {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="MAPA" component={Login}/>
-      <Tab.Screen name="FAVORITOS" component={Register} />
+      <Tab.Screen name="MAPA" component={Mapa}/>
+      <Tab.Screen name="FAVORITOS" component={Favoritos}/>
     </Tab.Navigator>
   );
 };
