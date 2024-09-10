@@ -43,11 +43,12 @@ const Cadastro = ({ navigation }) => {
                 style={styles.textinput}
                 autoCapitalize='none'
                 placeholder='Senha'                        
-                onChangeText={setPassword}></TextInput>
+                onChangeText={setPassword}
+                secureTextEntry></TextInput>
                 <TouchableOpacity onPress={signUp}>
                     <Text>Cadastrar</Text>
                 </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('LOGIN')}>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                 <Text>Voltar ao login</Text>
             </TouchableOpacity>
         </View>
