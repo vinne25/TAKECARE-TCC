@@ -1,16 +1,10 @@
-import React from "react";
-import { StatusBar } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import React from 'react';
+import Routes from './src/routes';
 
-import Linkagem from "./routes/Linkagem";
-
-const App = () => {
-    return(
-        <NavigationContainer>
-            <StatusBar backgroundColor="black" barStyle="light-content"/>
-            <Linkagem/>
-        </NavigationContainer>
-    )
+const App = () =>  {
+    return (
+        <Routes />
+    );
 }
 
 export default App;

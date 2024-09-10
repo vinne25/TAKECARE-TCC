@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "543149473704",
+    "project_id": "takecare-dfb73",
+    "storage_bucket": "takecare-dfb73.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:543149473704:android:eee5abc81bd92751c9a79d",
+        "android_client_info": {
+          "package_name": "com.takecare"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiRjQT4FxO4adCocbVIzajwnibo6tL-W8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
