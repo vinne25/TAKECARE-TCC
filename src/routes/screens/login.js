@@ -107,8 +107,8 @@ const styles = StyleSheet.create({
     },
 
     btentrar: {
-        backgroundColor: 'cyan',
-        borderRadius: 100,
+        backgroundColor: '#0BBEE5',
+        borderRadius: 15,
         width: '60%',
         height: '10%',
         top: '15%'
