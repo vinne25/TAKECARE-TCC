@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, TouchableOpacity, StyleSheet, TextInput, Image } from "react-native";
+import { Text, View, TouchableOpacity, StyleSheet, TextInput, Image, SafeAreaView } from "react-native";
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
 
@@ -21,20 +21,27 @@ const Login = ({ navigation }) => {
     return (
         <View style={styles.conteiner}>
             <Image
-                source={require('../../../assets/Imagem/logotk.png')}
-                style={{ width: '100%', height: '13%', bottom: '27%' }}
+                source={require('../../../assets/Imagem/logo.png')}
+                style={{ width: '100%', height: '13%', bottom: '17%' }}
                 resizeMode="contain"
             />
-            <Text>Login</Text>
-            <TextInput style={styles.textinput} placeholder="Email" onChangeText={setEmail}></TextInput>
-            <TextInput style={styles.textinput} placeholder="Senha" onChangeText={setPassword} secureTextEntry></TextInput>
-            <Text>Ainda não possui um login?</Text>
+            <SafeAreaView style={styles.arealg}>
+            <Text style={styles.txtlg}>Login</Text>
+
+            <Text style={styles.EeS}>E-mail</Text>
+            <TextInput style={styles.inputE}  onChangeText={setEmail}></TextInput>
+
+            <Text style={styles.EeS}>Senha</Text>
+            <TextInput style={styles.inputS}  onChangeText={setPassword} secureTextEntry></TextInput>
+
+            <Text style={styles.anpl}>Ainda não possui um login?</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
-                <Text>Cadastre-se</Text>
+                <Text style={styles.txtcd}>Cadastre-se</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={signIn}>
-                <Text>Entrar</Text>
+            <TouchableOpacity style={styles.btentrar} onPress={signIn}>
+                <Text style={styles.txtent}>Entrar</Text>
             </TouchableOpacity>
+            </SafeAreaView>
         </View>
     )
 };
@@ -45,16 +52,73 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: 'white'
     },
-    textinput: {
-        borderStyle: 'solid',
-        borderRadius: 15,
-        borderWidth: 2,
-        width: 200,
-        alignSelf: 'center'
+
+    arealg:{
+        bottom: '7%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        height: '45%',
+        width:'70%'
     },
-    text: {
-        position: 'absolute'
+
+    txtlg:{
+        fontWeight:'bold',
+        color: 'black',
+        fontSize: 20,
+        marginBottom: '10%'
+    },
+
+    EeS:{
+        fontWeight: 'bold',
+        color: 'black',
+        right: '38%',
+        top: '2%'
+    },
+
+    anpl:{
+        fontSize: 12,
+        right: '14%',
+        color: 'black'
+    },
+
+    txtcd:{
+        position:'absolute',
+        left:'18%',
+        fontSize: 12,
+        bottom: '10%',
+        color: 'black'
+    },
+
+    inputE: {
+        borderBottomWidth: 2,
+        width: '95%',
+        alignSelf: 'center',
+        marginBottom: '8%'
+    },
+
+    inputS: {
+        borderBottomWidth: 2,
+        width: '95%',
+        alignSelf: 'center',
+        marginBottom: '3%'
+    },
+
+    btentrar: {
+        backgroundColor: 'cyan',
+        borderRadius: 100,
+        width: '60%',
+        height: '10%',
+        top: '15%'
+    },
+
+    txtent:{
+        top: '15%',
+        alignSelf: 'center',
+        fontWeight: 'bold',
+        color: 'black',
     }
 })
 
