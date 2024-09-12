@@ -67,19 +67,20 @@ img:{
   height: '15%',
 },
 button: {
-    position: 'absolute',     //para posicioná-lo de forma independente do layout principal
-    bottom: 45,               // Distância da parte inferior da tela
-    justifyContent: 'flex-end',
-    backgroundColor: '#0BBEE5',
-    padding: 10,
-    borderRadius: 15,
-    height: '6.2%',
-    width: '65%',
-    alignItems: 'center',
+  position: 'absolute', //para posicioná-lo de forma independente do layout principal
+  bottom: 45, // Distância da parte inferior da tela
+  justifyContent: 'flex-end',
+  backgroundColor: '#0BBEE5',
+  padding: 10,
+  borderRadius: 15,
+  height: '6.2%',
+  width: '65%',
+  alignItems: 'center',
 },
 buttonText:{
-    color: '#fff',
-    fontSize: 20,
+  color: '#fff',
+  fontSize: 21,
+  bottom: '8%'
 },
 image: {
   position: 'absolute',
