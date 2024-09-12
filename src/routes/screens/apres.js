@@ -2,7 +2,9 @@ import { View,
   TouchableOpacity, 
   Image, 
   Text, 
-  StyleSheet} from 'react-native';
+  StyleSheet,
+  Animated} from 'react-native';
+  import React, { useState } from 'react';
   import * as Animatable from 'react-native-animatable'
 
 
@@ -38,6 +40,10 @@ const Pesquisar = ({ navigation }) => {
         <Text style={styles.texto2}>Use os filtros para pesquisar baseados nas
         suas necessidades</Text>
         </View>
+        <Image
+        source={require('../../../assets/Imagem/layout.png')}
+        style={styles.image}
+      />
         <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate('Conexoes')}>
@@ -86,23 +92,27 @@ texto2:{
 },
 img:{
   width: '100%', 
-  height: '13%',
+  height: '15%',
 },
 button: {
     position: 'absolute', //para posicioná-lo de forma independente do layout principal
-    bottom: 30, // Distância da parte inferior da tela
+    bottom: 45, // Distância da parte inferior da tela
     justifyContent: 'flex-end',
     backgroundColor: '#0BBEE5',
     padding: 10,
     borderRadius: 15,
-    height: 50,
-    width: 150,
+    height: '6.2%',
+    width: '65%',
     alignItems: 'center',
 },
 buttonText:{
     color: '#fff',
     fontSize: 20,
 },
+image: {
+  width: '106%',
+  height: '76%',
+  resizeMode: 'contain',}
 });
 
 export default Pesquisar;
