@@ -69,7 +69,7 @@ img:{
 button: {
   position: 'absolute', //para posicioná-lo de forma independente do layout principal
   bottom: 45, // Distância da parte inferior da tela
-  justifyContent: 'flex-end',
+  justifyContent: 'center',
   backgroundColor: '#0BBEE5',
   padding: 10,
   borderRadius: 15,

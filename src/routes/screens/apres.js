@@ -21,8 +21,8 @@ const Pesquisar = ({ navigation }) => {
         <View style={styles.row}>
         <View
         style={{
-          width: 15,
-          height: 15,
+          width: '4%',
+          height: '30%',
           borderRadius: 100,
           backgroundColor: '#0BBEE5',
         }}/>
@@ -32,8 +32,8 @@ const Pesquisar = ({ navigation }) => {
         <View style={styles.row2}>
         <View
         style={{
-          width: 15,
-          height: 15,
+          width: '4%',
+          height: '30%',
           borderRadius: 100,
           backgroundColor: '#0BBEE5',
         }}/>
@@ -66,16 +66,15 @@ row: {
   flexDirection: 'row',
   justifyContent: 'space-between', // Espaçamento entre os objetos
   alignItems: 'center', // Alinha os objetos verticalmente
-  paddingLeft: 20,
-  paddingRight: 20,
+  paddingLeft: '3%',
   marginBottom: 10,
 },
 row2: {
   flexDirection: 'row',
   justifyContent: 'space-between', // Espaçamento entre os objetos
   alignItems: 'center', // Alinha os objetos verticalmente
-  paddingLeft: 20,
-  paddingRight: 12,
+  paddingLeft: '4%',
+  paddingRight: '3%',
   marginBottom: 10,
 },
 texto:{
@@ -97,7 +96,7 @@ img:{
 button: {
   position: 'absolute', //para posicioná-lo de forma independente do layout principal
   bottom: 45, // Distância da parte inferior da tela
-  justifyContent: 'flex-end',
+  justifyContent: 'center',
   backgroundColor: '#0BBEE5',
   padding: 10,
   borderRadius: 15,

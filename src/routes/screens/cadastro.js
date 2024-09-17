@@ -6,7 +6,9 @@ import {
     TouchableOpacity,
     TextInput,
     StyleSheet,
+    Image,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Cadastro = ({ navigation }) => {
 
@@ -33,6 +35,12 @@ const Cadastro = ({ navigation }) => {
       }
     return (
         <View style={styles.conteiner}>
+            <Image
+            source ={require('../../../assets/Imagem/logotk.png')}
+            style={{ width: '100%', height: '13%', bottom: '17%' }}
+            resizeMode="contain"
+            />
+            <SafeAreaView style={styles.areacd}>
             <Text>Cadastro</Text>
             <TextInput
                 style={styles.textinput}
@@ -51,6 +59,7 @@ const Cadastro = ({ navigation }) => {
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                 <Text>Voltar ao login</Text>
             </TouchableOpacity>
+            </SafeAreaView>
         </View>
     );
 }
@@ -61,7 +70,17 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: 'white'
     },
+
+    areacd: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        height: '45%',
+        width:'70%'
+    },
+
     textinput: {
         borderStyle: 'solid',
         borderRadius: 15,

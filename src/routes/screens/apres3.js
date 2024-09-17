@@ -11,7 +11,7 @@ const Seguranca = ({ navigation }) => {
           source={require("../../../assets/Imagem/logotk.png")}
           resizeMode="contain"
         />
-        <Text style={styles.texto}>Segurança e transparência</Text>
+        <Text style={styles.texto}>Segurança e Transparência</Text>
         <Image
         source={require('../../../assets/Imagem/icones/icone1.png')}
         style={styles.icone1}
@@ -68,12 +68,12 @@ const styles = StyleSheet.create({
   },
   img:{
     width: '100%', 
-    height: '13%',
+    height: '15%',
   },
   button: {
     position: 'absolute', //para posicioná-lo de forma independente do layout principal
     bottom: 45, // Distância da parte inferior da tela
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     backgroundColor: '#0BBEE5',
     padding: 10,
     borderRadius: 15,

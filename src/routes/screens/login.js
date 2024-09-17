@@ -21,7 +21,7 @@ const Login = ({ navigation }) => {
     return (
         <View style={styles.conteiner}>
             <Image
-                source={require('../../../assets/Imagem/logo.png')}
+                source={require('../../../assets/Imagem/logotk.png')}
                 style={{ width: '100%', height: '13%', bottom: '17%' }}
                 resizeMode="contain"
             />
@@ -95,14 +95,12 @@ const styles = StyleSheet.create({
     inputE: {
         borderBottomWidth: 2,
         width: '95%',
-        alignSelf: 'center',
         marginBottom: '8%'
     },
 
     inputS: {
         borderBottomWidth: 2,
         width: '95%',
-        alignSelf: 'center',
         marginBottom: '3%'
     },
 
@@ -111,12 +109,12 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         width: '60%',
         height: '10%',
-        top: '15%'
+        top: '15%',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
 
     txtent:{
-        top: '15%',
-        alignSelf: 'center',
         fontWeight: 'bold',
         color: 'black',
     }
