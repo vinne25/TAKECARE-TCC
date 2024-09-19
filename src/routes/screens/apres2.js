@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View,Image,TouchableOpacity,StyleSheet, Text} from 'react-native';
 import * as Animatable from 'react-native-animatable'
+import { AlignLeft } from 'react-native-feather';
 
 const Conexoes = ({navigation}) => {
     return (
@@ -12,6 +13,37 @@ const Conexoes = ({navigation}) => {
           resizeMode="contain"
         />
         <Text style={styles.texto}>Conexões</Text>
+        <View style={styles.row}>
+        <View
+        style={{
+          width: '4%',
+          height: '30%',
+          borderRadius: 50,
+          backgroundColor: '#0BBEE5',
+        }}/>
+        <Text style={styles.texto2}>Responda mensagens ou envie mensagens para babás</Text>
+        </View>
+        <View style={styles.row}>
+        <View
+        style={{
+          width: '4%',
+          height: '30%',
+          borderRadius: 90,
+          backgroundColor: '#0BBEE5',
+        }}/>
+        <Text style={styles.texto2}>Tenha um encontro introdutorio usando nosso chat</Text>
+        </View>
+        <View style={styles.row}>
+        <View
+        style={{
+          width: '4%',
+          height: '30%',
+          borderRadius: 100,
+          backgroundColor: '#0BBEE5',
+          alignItems: AlignLeft,
+        }}/>
+        <Text style={styles.texto2}>Planeje o trabalho da babá e alinhe pontos importantes</Text>
+        </View>
         <Image
         source={require('../../../assets/Imagem/layout2.png')}
         style={styles.image}
