@@ -40,7 +40,7 @@ const Conexoes = ({navigation}) => {
           height: '30%',
           borderRadius: 100,
           backgroundColor: '#0BBEE5',
-          alignItems: AlignLeft,
+          
         }}/>
         <Text style={styles.texto2}>Planeje o trabalho da babá e alinhe pontos importantes</Text>
         </View>
