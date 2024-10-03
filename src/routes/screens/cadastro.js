@@ -74,7 +74,7 @@ const Cadastro = ({navigation}) => {
         <TextInput 
           style={styles.textinput}
           autoCapitalize="none"
-          placeholder="Senha"
+          placeholder="Nome"
           onChangeText={setName}
           secureTextEntry></TextInput>
         <TouchableOpacity onPress={signUp}>
