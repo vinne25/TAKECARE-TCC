@@ -7,6 +7,8 @@ import {
     TextInput,
     StyleSheet,
     Image,
+    Modal,
+    FlatList
 } from 'react-native';
 import { ArrowDown } from "react-native-feather";
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -53,10 +55,6 @@ const Cadastro = ({ navigation }) => {
     };
 
     const [visible, setVisible] = useState(false);
-    const data = [{label: 'Masculino'},
-                  {label: 'Feminino'},  
-                  {label: 'Outros'  }  
-                ];
 
 
   const toggleList = () => {
@@ -98,17 +96,19 @@ const Cadastro = ({ navigation }) => {
                     <ArrowDown color='black' />
                  </TouchableOpacity>
       {visible && (
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.optionButton} onPress={() => handleSelect('Masculino')}>
-            <Text style={styles.buttonText}>Masculino</Text>
+        <Modal visible={true} animationType='fade' transparent={true} onRequestClose={() => {}}>
+            <View style={styles.modalcontainer}>
+          <TouchableOpacity style={styles.modalcontente} onPress={() => handleSelect('Masculino')}>
+            <Text style={styles.options}>Masculino</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.optionButton} onPress={() => handleSelect('Feminino')}>
-            <Text style={styles.buttonText}>Feminino</Text>
+          <TouchableOpacity style={styles.modalcontente} onPress={() => handleSelect('Feminino')}>
+            <Text style={styles.options}>Feminino</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.optionButton} onPress={() => handleSelect('Outros')}>
-            <Text style={styles.buttonText}>Outros</Text>
+          <TouchableOpacity style={styles.modalcontente} onPress={() => handleSelect('Outros')}>
+            <Text style={styles.options}>Outros</Text>
           </TouchableOpacity>
-        </View>
+          </View>
+        </Modal>
       )}
                 <TouchableOpacity onPress={signUp}>
                     <Text>Cadastrar</Text>
@@ -151,6 +151,29 @@ const styles = StyleSheet.create({
     btnsexo:{
         flexDirection: 'row'
     },
+
+    modalcontainer:{
+        backgroundColor: 'rgba(0,0,0, 0.5)',
+        flex:1,
+        justifyContent: 'center',
+    },
+
+    modalcontente:{
+        backgroundColor: 'white',
+        marginHorizontal: 10,
+        borderRadius:8,
+        padding: 20,
+    },
+
+    options:{
+        paddingVertical: 14,
+        backgroundColor: 'rgba(208, 208, 208, 0.40)',
+        borderRadius: 4,
+        paddingHorizontal: 130,
+        fontWeight: 'bold',
+        alignSelf: 'center',
+    }
+
 });
 
 export default Cadastro;
