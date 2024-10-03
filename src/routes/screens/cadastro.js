@@ -7,8 +7,8 @@ import {
     TextInput,
     StyleSheet,
     Image,
-    Alert,
 } from 'react-native';
+import { ArrowDown } from "react-native-feather";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import firestore from '@react-native-firebase/firestore';
 
@@ -51,6 +51,22 @@ const Cadastro = ({ navigation }) => {
             console.error(error);
         }
     };
+
+    const [visible, setVisible] = useState(false);
+    const data = [{label: 'Masculino'},
+                  {label: 'Feminino'},  
+                  {label: 'Outros'  }  
+                ];
+
+
+  const toggleList = () => {
+    setVisible(!visible);
+  };
+
+  const handleSelect = (gender) => {
+    setVisible(false); // Esconde a lista após a seleção
+  };
+
     return (
         <View style={styles.conteiner}>
             <Image
@@ -77,6 +93,23 @@ const Cadastro = ({ navigation }) => {
                     placeholder="Senha"
                     onChangeText={setName}
                     secureTextEntry></TextInput>
+                    <TouchableOpacity style={styles.btnsexo} onPress={toggleList}>
+                    <Text> Selecione seu sexo </Text>
+                    <ArrowDown color='black' />
+                 </TouchableOpacity>
+      {visible && (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.optionButton} onPress={() => handleSelect('Masculino')}>
+            <Text style={styles.buttonText}>Masculino</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.optionButton} onPress={() => handleSelect('Feminino')}>
+            <Text style={styles.buttonText}>Feminino</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.optionButton} onPress={() => handleSelect('Outros')}>
+            <Text style={styles.buttonText}>Outros</Text>
+          </TouchableOpacity>
+        </View>
+      )}
                 <TouchableOpacity onPress={signUp}>
                     <Text>Cadastrar</Text>
                 </TouchableOpacity>
@@ -113,6 +146,10 @@ const styles = StyleSheet.create({
     },
     text: {
         position: 'absolute',
+    },
+
+    btnsexo:{
+        flexDirection: 'row'
     },
 });
 
