@@ -54,16 +54,32 @@ const Cadastro = ({ navigation }) => {
         }
     };
 
+    const [selectedSexuality, setSelectedSexuality] = useState(null);
     const [visible, setVisible] = useState(false);
 
+    const data = [
+        { id: '1', label: 'Masculino' },
+        { id: '2', label: 'Feminino' },
+        { id: '3', label: 'Outro' }
+    ];
 
-  const toggleList = () => {
-    setVisible(!visible);
-  };
+    const handleButtonPress = (label) => {
+        setSelectedSexuality(label);
+    };
 
-  const handleSelect = (gender) => {
-    setVisible(false); // Esconde a lista após a seleção
-  };
+    const toggleList = () => {
+        setVisible(!visible);
+    };
+
+    const handleSelect = () => {
+        setVisible(false); // Esconde a lista após a seleção
+    };
+
+    const renderItem = ({ item }) => (
+        <TouchableOpacity style={styles.options} onPress={() => { handleButtonPress(item.label); handleSelect() }}>
+            <Text>{item.label}</Text>
+        </TouchableOpacity>
+    );
 
     return (
         <View style={styles.conteiner}>
@@ -91,25 +107,26 @@ const Cadastro = ({ navigation }) => {
                     placeholder="Senha"
                     onChangeText={setName}
                     secureTextEntry></TextInput>
-                    <TouchableOpacity style={styles.btnsexo} onPress={toggleList}>
-                    <Text> Selecione seu sexo </Text>
+                <TouchableOpacity style={styles.btnsexo} onPress={toggleList}>
+                    {selectedSexuality && (
+                        <Text>
+                            {selectedSexuality}
+                        </Text>
+                    )}
                     <ArrowDown color='black' />
-                 </TouchableOpacity>
-      {visible && (
-        <Modal visible={true} animationType='fade' transparent={true} onRequestClose={() => {}}>
-            <View style={styles.modalcontainer}>
-          <TouchableOpacity style={styles.modalcontente} onPress={() => handleSelect('Masculino')}>
-            <Text style={styles.options}>Masculino</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.modalcontente} onPress={() => handleSelect('Feminino')}>
-            <Text style={styles.options}>Feminino</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.modalcontente} onPress={() => handleSelect('Outros')}>
-            <Text style={styles.options}>Outros</Text>
-          </TouchableOpacity>
-          </View>
-        </Modal>
-      )}
+                </TouchableOpacity>
+                {(visible &&
+                    <Modal visible={true} animationType='fade' transparent={true} onRequestClose={() => { }}>
+                        <TouchableOpacity style={styles.modalcontainer} activeOpacity={1}>
+                            <TouchableOpacity style={styles.modalcontente} activeOpacity={1} >
+                                <FlatList
+                                    data={data}
+                                    renderItem={renderItem}
+                                    keyExtractor={item => item.id} />
+                            </TouchableOpacity>
+                        </TouchableOpacity>
+                    </Modal>
+                )}
                 <TouchableOpacity onPress={signUp}>
                     <Text>Cadastrar</Text>
                 </TouchableOpacity>
@@ -148,24 +165,24 @@ const styles = StyleSheet.create({
         position: 'absolute',
     },
 
-    btnsexo:{
+    btnsexo: {
         flexDirection: 'row'
     },
 
-    modalcontainer:{
+    modalcontainer: {
         backgroundColor: 'rgba(0,0,0, 0.5)',
-        flex:1,
+        flex: 1,
         justifyContent: 'center',
     },
 
-    modalcontente:{
+    modalcontente: {
         backgroundColor: 'white',
         marginHorizontal: 10,
-        borderRadius:8,
+        borderRadius: 8,
         padding: 20,
     },
 
-    options:{
+    options: {
         paddingVertical: 14,
         backgroundColor: 'rgba(208, 208, 208, 0.40)',
         borderRadius: 4,
