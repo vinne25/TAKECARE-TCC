@@ -157,27 +157,27 @@ const Cadastro = ({ navigation }) => {
                             onChangeText={setCpf}
                             value={cpf}
                         />
-
-<TouchableOpacity style={styles.btnsexo} onPress={toggleList}>
-                    {selectedSexuality && (
-                        <Text>
-                           . {selectedSexuality}
-                        </Text>
-                    )}
-                    <ArrowDown color='black' />
-                </TouchableOpacity>
-                {(visible &&
-                    <Modal visible={true} animationType='fade' transparent={true} onRequestClose={() => { }}>
-                        <TouchableOpacity style={styles.modalcontainer} activeOpacity={1}>
-                            <TouchableOpacity style={styles.modalcontente} activeOpacity={1} >
-                                <FlatList
-                                    data={data}
-                                    renderItem={renderItem}
-                                    keyExtractor={item => item.id} />
-                            </TouchableOpacity>
+                        <Text style={styles.txtgnr}> Gênero </Text>
+                        <TouchableOpacity style={styles.btngnr} onPress={toggleList}>
+                            {selectedSexuality && (
+                                <Text>
+                                     {selectedSexuality}
+                                </Text>
+                            )}
+                            <ArrowDown color='black' />
                         </TouchableOpacity>
-                    </Modal>
-                )}
+                        {(visible &&
+                            <Modal visible={true} animationType='fade' transparent={true} onRequestClose={() => { }}>
+                                <TouchableOpacity style={styles.modalcontainer} activeOpacity={1}>
+                                    <TouchableOpacity style={styles.modalcontente} activeOpacity={1} >
+                                        <FlatList
+                                            data={data}
+                                            renderItem={renderItem}
+                                            keyExtractor={item => item.id} />
+                                    </TouchableOpacity>
+                                </TouchableOpacity>
+                            </Modal>
+                        )}
 
                         <Text style={styles.label}>Data de Nascimento</Text>
                         <TextInput
@@ -292,8 +292,16 @@ const styles = StyleSheet.create({
         fontSize: 16, // Ajustado para harmonizar com o resto
     },
 
-    btnsexo: {
-        flexDirection: 'row'
+    txtgnr:{
+        fontWeight: 'bold',
+        color: 'black'
+    },
+
+    btngnr: {
+        flexDirection: 'row',
+        color: 'black',
+        borderRadius: 5,
+
     },
 
     modalcontainer: {
