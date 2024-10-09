@@ -6,14 +6,14 @@ import {
     TextInput,
     StyleSheet,
     Image,
-    Alert,
-    ActivityIndicator,
+    Modal,
+    FlatList,
     ScrollView,
 } from 'react-native';
+import { ArrowDown } from "react-native-feather";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
-import { Picker } from '@react-native-picker/picker';
 
 const Cadastro = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -69,6 +69,33 @@ const Cadastro = ({ navigation }) => {
             Alert.alert('Erro', 'Ocorreu um erro inesperado. Tente novamente.');
         }
     };
+
+    const [selectedSexuality, setSelectedSexuality] = useState(null);
+    const [visible, setVisible] = useState(false);
+
+    const data = [
+        { id: '1', label: 'Masculino' },
+        { id: '2', label: 'Feminino' },
+        { id: '3', label: 'Outro' }
+    ];
+
+    const handleButtonPress = (label) => {
+        setSelectedSexuality(label);
+    };
+
+    const toggleList = () => {
+        setVisible(!visible);
+    };
+
+    const handleSelect = () => {
+        setVisible(false); // Esconde a lista após a seleção
+    };
+
+    const renderItem = ({ item }) => (
+        <TouchableOpacity style={styles.options} onPress={() => { handleButtonPress(item.label); handleSelect() }}>
+            <Text>{item.label}</Text>
+        </TouchableOpacity>
+    );
 
     return (
         <View>
@@ -131,16 +158,26 @@ const Cadastro = ({ navigation }) => {
                             value={cpf}
                         />
 
-                        <Text style={styles.label}>Sexo</Text>
-                        <Picker
-                            selectedValue={sexo}
-                            style={styles.input}
-                            onValueChange={(itemValue) => setSexo(itemValue)}
-                        >
-                            <Picker.Item label="Selecione seu sexo" value="" />
-                            <Picker.Item label="Masculino" value="Masculino" />
-                            <Picker.Item label="Feminino" value="Feminino" />
-                        </Picker>
+<TouchableOpacity style={styles.btnsexo} onPress={toggleList}>
+                    {selectedSexuality && (
+                        <Text>
+                           . {selectedSexuality}
+                        </Text>
+                    )}
+                    <ArrowDown color='black' />
+                </TouchableOpacity>
+                {(visible &&
+                    <Modal visible={true} animationType='fade' transparent={true} onRequestClose={() => { }}>
+                        <TouchableOpacity style={styles.modalcontainer} activeOpacity={1}>
+                            <TouchableOpacity style={styles.modalcontente} activeOpacity={1} >
+                                <FlatList
+                                    data={data}
+                                    renderItem={renderItem}
+                                    keyExtractor={item => item.id} />
+                            </TouchableOpacity>
+                        </TouchableOpacity>
+                    </Modal>
+                )}
 
                         <Text style={styles.label}>Data de Nascimento</Text>
                         <TextInput
@@ -254,6 +291,33 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 16, // Ajustado para harmonizar com o resto
     },
+
+    btnsexo: {
+        flexDirection: 'row'
+    },
+
+    modalcontainer: {
+        backgroundColor: 'rgba(0,0,0, 0.5)',
+        flex: 1,
+        justifyContent: 'center',
+    },
+
+    modalcontente: {
+        backgroundColor: 'white',
+        marginHorizontal: 10,
+        borderRadius: 8,
+        padding: 20,
+    },
+
+    options: {
+        paddingVertical: 14,
+        backgroundColor: 'rgba(208, 208, 208, 0.40)',
+        borderRadius: 4,
+        paddingHorizontal: 130,
+        fontWeight: 'bold',
+        alignSelf: 'center',
+    }
+
 });
 
 export default Cadastro;
