@@ -1,123 +1,152 @@
-import React, { useEffect, useState } from "react";
-import { Text, View, TouchableOpacity, StyleSheet, TextInput, Image, SafeAreaView } from "react-native";
-import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-
+import React, { useState } from "react";
+import { Text, View, TouchableOpacity, StyleSheet, TextInput, Image, SafeAreaView, ActivityIndicator, Alert } from "react-native";
+import auth from '@react-native-firebase/auth';
 
 const Login = ({ navigation }) => {
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
+    const [loading, setLoading] = useState(false);
 
     function signIn() {
+        if (email === '' || password === '') {
+            Alert.alert('Erro', 'Preencha todos os campos.');
+            return;
+        }
+
+        setLoading(true);
         auth().signInWithEmailAndPassword(email, password)
             .then(() => {
-                navigation.navigate('TabRoutes')
-                console.log('usuário logado!')
+                setLoading(false);
+                navigation.navigate('TabRoutes');
+                console.log('Usuário logado!');
             })
-            .catch(error => console.log(error));
+            .catch(error => {
+                setLoading(false);
+                Alert.alert('Erro', 'Falha ao fazer login. Verifique suas credenciais.');
+                console.log(error);
+            });
     }
 
     return (
         <View style={styles.conteiner}>
+
+            <TouchableOpacity onPress={() => navigation.navigate('TabRoutes')}>
+                <Text style={styles.txtent}>ADM</Text>
+            </TouchableOpacity>
             <Image
                 source={require('../../../assets/Imagem/logotk.png')}
-                style={{ width: '100%', height: '13%', bottom: '17%' }}
+                style={styles.logo}
                 resizeMode="contain"
             />
-            <SafeAreaView style={styles.arealg}>
-            <Text style={styles.txtlg}>Login</Text>
+            <SafeAreaView style={styles.loginArea}>
+                <Text style={styles.title}>Login</Text>
 
-            <Text style={styles.EeS}>E-mail</Text>
-            <TextInput style={styles.inputE}  onChangeText={setEmail}></TextInput>
+                <Text style={styles.label}>E-mail</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Digite seu e-mail"
+                    keyboardType="email-address"
+                    onChangeText={setEmail}
+                    value={email}
+                    autoCapitalize="none"
+                />
 
-            <Text style={styles.EeS}>Senha</Text>
-            <TextInput style={styles.inputS}  onChangeText={setPassword} secureTextEntry></TextInput>
+                <Text style={styles.label}>Senha</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Digite sua senha"
+                    secureTextEntry
+                    onChangeText={setPassword}
+                    value={password}
+                />
 
-            <Text style={styles.anpl}>Ainda não possui um login?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
-                <Text style={styles.txtcd}>Cadastre-se</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.btentrar} onPress={signIn}>
-                <Text style={styles.txtent}>Entrar</Text>
-            </TouchableOpacity>
+                <Text style={styles.prompt}>Ainda não possui um login?</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
+                    <Text style={styles.signup}>Cadastre-se</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.loginButton} onPress={signIn} disabled={loading}>
+                    {loading ? (
+                        <ActivityIndicator size="small" color="#FFF" />
+                    ) : (
+                        <Text style={styles.loginButtonText}>Entrar</Text>
+                    )}
+                </TouchableOpacity>
             </SafeAreaView>
         </View>
-    )
+    );
 };
 
 const styles = StyleSheet.create({
-    conteiner: {
+    container: {
         flex: 1,
-        alignContent: 'center',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'white'
+        backgroundColor: '#F5F5F5'
     },
-
-    arealg:{
-        bottom: '7%',
-        justifyContent: 'center',
+    logo: {
+        width: '100%',
+        height: '13%',
+        marginBottom: '5%'
+    },
+    loginArea: {
+        width: '80%',
         alignItems: 'center',
+        padding: 20,
+        backgroundColor: '#FFF',
         borderRadius: 10,
-        height: '45%',
-        width:'70%'
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        elevation: 5
     },
-
-    txtlg:{
-        fontWeight:'bold',
-        color: 'black',
-        fontSize: 20,
-        marginBottom: '10%'
-    },
-
-    EeS:{
+    title: {
+        fontSize: 24,
         fontWeight: 'bold',
-        color: 'black',
-        right: '38%',
-        top: '2%'
+        marginBottom: 20
     },
-
-    anpl:{
-        fontSize: 12,
-        right: '14%',
-        color: 'black'
+    label: {
+        alignSelf: 'flex-start',
+        fontSize: 16,
+        color: '#333',
+        marginBottom: 5
     },
-
-    txtcd:{
-        position:'absolute',
-        left:'18%',
-        fontSize: 12,
-        bottom: '10%',
-        color: 'black'
+    input: {
+        width: '100%',
+        height: 40,
+        borderColor: '#CCC',
+        borderWidth: 1,
+        borderRadius: 5,
+        paddingHorizontal: 10,
+        marginBottom: 15
     },
-
-    inputE: {
-        borderBottomWidth: 2,
-        width: '95%',
-        marginBottom: '8%'
+    prompt: {
+        fontSize: 14,
+        color: '#555',
+        marginTop: 10
     },
-
-    inputS: {
-        borderBottomWidth: 2,
-        width: '95%',
-        marginBottom: '3%'
+    signup: {
+        fontSize: 14,
+        color: '#0BBEE5',
+        marginBottom: 20
     },
-
-    btentrar: {
+    loginButton: {
         backgroundColor: '#0BBEE5',
-        borderRadius: 15,
-        width: '60%',
-        height: '10%',
-        top: '15%',
+        borderRadius: 5,
+        width: '100%',
+        height: 45,
+        justifyContent: 'center',
         alignItems: 'center',
-        justifyContent: 'center'
+        marginTop: 15
     },
-
-    txtent:{
-        fontWeight: 'bold',
-        color: 'black',
+    loginButtonText: {
+        color: '#FFF',
+        fontSize: 16,
+        fontWeight: 'bold'
+    },
+    image:{
+        zIndex:''
     }
-})
+});
 
 export default Login;
