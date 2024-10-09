@@ -1,9 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { View, ScrollView, Text, TextInput, Button } from 'react-native';
-import { getAuth } from "firebase/auth";
+import auth from '@react-native-firebase/auth';
 import { addDoc, collection, limit, orderBy, query, serverTimestamp } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { databaseApp } from "./services/firebaseConfig";
 
 const auth = getAuth();
 
