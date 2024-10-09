@@ -110,7 +110,7 @@ const Cadastro = ({ navigation }) => {
                 <TouchableOpacity style={styles.btnsexo} onPress={toggleList}>
                     {selectedSexuality && (
                         <Text>
-                            {selectedSexuality}
+                           . {selectedSexuality}
                         </Text>
                     )}
                     <ArrowDown color='black' />
