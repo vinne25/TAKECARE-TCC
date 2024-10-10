@@ -10,7 +10,7 @@ import {
     FlatList,
     ScrollView,
 } from 'react-native';
-import { ArrowDown } from "react-native-feather";
+import { Pocket } from "react-native-feather";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
@@ -157,14 +157,14 @@ const Cadastro = ({ navigation }) => {
                             onChangeText={setCpf}
                             value={cpf}
                         />
-                        <Text style={styles.txtgnr}> Gênero </Text>
-                        <TouchableOpacity style={styles.btngnr} onPress={toggleList}>
+                        <Text style={styles.label}> Gênero </Text>
+                        <TouchableOpacity style={styles.gnrbtn} onPress={toggleList}>
+                            <Text style={styles.gnrtxt}> Selecione seu Gênero: </Text>
                             {selectedSexuality && (
-                                <Text>
-                                     {selectedSexuality}
+                                <Text style={styles.gnrtxt}>
+                                    {selectedSexuality}
                                 </Text>
                             )}
-                            <ArrowDown color='black' />
                         </TouchableOpacity>
                         {(visible &&
                             <Modal visible={true} animationType='fade' transparent={true} onRequestClose={() => { }}>
@@ -258,8 +258,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20,
         textAlign: 'center', // Centralizado
+        color: 'black',
     },
     label: {
+        fontWeight: 'bold',
         fontSize: 16,
         color: '#333',
         marginBottom: 8, // Espaçamento consistente
@@ -292,16 +294,18 @@ const styles = StyleSheet.create({
         fontSize: 16, // Ajustado para harmonizar com o resto
     },
 
-    txtgnr:{
-        fontWeight: 'bold',
-        color: 'black'
+    gnrbtn:{
+        alignItems: 'center',
+        flexDirection: 'row',
+        borderWidth: 1,
+        borderColor: '#CCC',
+        borderRadius: 4,
+        paddingHorizontal: 10,
+        height: 45,
+        marginBottom: 15,
     },
 
-    btngnr: {
-        flexDirection: 'row',
-        color: 'black',
-        borderRadius: 5,
-
+    gnrtxt:{
     },
 
     modalcontainer: {
@@ -311,20 +315,18 @@ const styles = StyleSheet.create({
     },
 
     modalcontente: {
-        backgroundColor: 'white',
-        marginHorizontal: 10,
+        backgroundColor: '#0BBEE5',
+        marginHorizontal: 20,
         borderRadius: 8,
         padding: 20,
     },
 
     options: {
         paddingVertical: 14,
-        backgroundColor: 'rgba(208, 208, 208, 0.40)',
+        backgroundColor: 'white',
         borderRadius: 4,
-        paddingHorizontal: 130,
-        fontWeight: 'bold',
-        alignSelf: 'center',
-    }
+        paddingHorizontal: '40%',
+    },
 
 });
 
