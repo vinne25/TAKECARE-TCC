@@ -9,6 +9,7 @@ import {
     Modal,
     FlatList,
     ScrollView,
+    Alert,
 } from 'react-native';
 import { Pocket } from "react-native-feather";
 import { SafeAreaView } from 'react-native-safe-area-context';
