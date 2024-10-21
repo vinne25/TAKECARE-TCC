@@ -1,34 +1,37 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, ActivityIndicator } from 'react-native';
-import firestore from '@react-native-firebase/firestore'; // Importa diretamente o Firestore
-//import auth from '@react-native-firebase/auth';
+import { View, Text, ActivityIndicator } from 'react-native';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
 const Perfil = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    //const user = auth().currentUser;
+    const user = auth().currentUser;
 
-    const unsubscribe = firestore()
-      .collection('Usuarios') // Nome da coleção
-      //.doc(user)
-      .onSnapshot((querySnapshot) => {
-        const items = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          email: doc.data().email,
-          nome: doc.data().name,
-          cpf: doc.data().cpf,
-        }));
-        setData(items);
-        setLoading(false); // Define loading como false após a obtenção dos dados
-      }, (error) => {
-        console.error("Erro ao buscar dados: ", error);
-        setLoading(false); // Define loading como false em caso de erro
-      });
+    if (user) {
+      const userId = user.uid;
 
-    // Função de limpeza para cancelar a assinatura
-    return () => unsubscribe();
+      const unsubscribe = firestore()
+        .collection('Usuarios') // Nome da coleção
+        .doc(userId) // Usar userId para acessar o documento
+        .onSnapshot((doc) => {
+          if (doc.exists) {
+            setData({
+              id: doc.id,
+              name: doc.data().name,
+              email: doc.data().email,
+            });
+          }
+          setLoading(false); // Define loading como false após a obtenção dos dados
+        });
+
+      // Função de limpeza para cancelar a assinatura
+      return () => unsubscribe();
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   if (loading) {
@@ -37,13 +40,11 @@ const Perfil = () => {
 
   return (
     <View>
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <Text>{JSON.stringify(item.nome)}</Text> // Renderiza os dados
-        )}
-      />
+      {data ? (
+        <Text>{JSON.stringify(data)}</Text> // Renderiza os dados do usuário
+      ) : (
+        <Text>Nenhum dado disponível</Text>
+      )}
     </View>
   );
 };
