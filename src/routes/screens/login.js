@@ -29,10 +29,10 @@ const Login = ({ navigation }) => {
 
     return (
         <View style={styles.conteiner}>
-
             <TouchableOpacity onPress={() => navigation.navigate('TabRoutes')}>
                 <Text style={styles.txtent}>ADM</Text>
             </TouchableOpacity>
+            <View style={styles.center}>
             <Image
                 source={require('../../../assets/Imagem/logotk.png')}
                 style={styles.logo}
@@ -74,6 +74,7 @@ const Login = ({ navigation }) => {
                 </TouchableOpacity>
             </SafeAreaView>
         </View>
+        </View>
     );
 };
 
@@ -82,11 +83,21 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5F5F5'
+        backgroundColor: '#F5F5F5',
+        
+
+    },
+    center:{
+        alignItems:'center',
+        position:'',
+        width:'100%',
+        height: '100%',
+        paddingTop:'30.5%'
+
     },
     logo: {
         width: '100%',
-        height: '13%',
+        height: '15rr%',
         marginBottom: '5%'
     },
     loginArea: {

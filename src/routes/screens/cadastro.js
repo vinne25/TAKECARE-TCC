@@ -10,8 +10,8 @@ import {
     FlatList,
     ScrollView,
     Alert,
+    ActivityIndicator,
 } from 'react-native';
-import { Pocket } from "react-native-feather";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
@@ -82,6 +82,8 @@ const Cadastro = ({ navigation }) => {
 
     const handleButtonPress = (label) => {
         setSelectedSexuality(label);
+        setSexo(label);
+        
     };
 
     const toggleList = () => {
@@ -89,7 +91,8 @@ const Cadastro = ({ navigation }) => {
     };
 
     const handleSelect = () => {
-        setVisible(false); // Esconde a lista após a seleção
+        setVisible(false)
+        
     };
 
     const renderItem = ({ item }) => (
