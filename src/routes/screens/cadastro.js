@@ -75,8 +75,8 @@ const Cadastro = ({ navigation }) => {
     const [visible, setVisible] = useState(false);
 
     const data = [
-        { id: '1', label: 'Masculino' },
-        { id: '2', label: 'Feminino' },
+        { id: '1', label: 'Masculino'},
+        { id: '2', label: 'Feminino'},
         { id: '3', label: 'Outro' }
     ];
 
@@ -175,6 +175,7 @@ const Cadastro = ({ navigation }) => {
                                 <TouchableOpacity style={styles.modalcontainer} activeOpacity={1}>
                                     <TouchableOpacity style={styles.modalcontente} activeOpacity={1} >
                                         <FlatList
+                                        style={styles.FlatList}
                                             data={data}
                                             renderItem={renderItem}
                                             keyExtractor={item => item.id} />
@@ -208,7 +209,6 @@ const Cadastro = ({ navigation }) => {
                                 <Text style={styles.signupButtonText}>Cadastrar</Text>
                             )}
                         </TouchableOpacity>
-
                         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                             <Text style={styles.backToLogin}>Voltar ao login</Text>
                         </TouchableOpacity>
@@ -233,6 +233,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 5,
         elevation: 5,
+    },
+    FlatList:{
+        width:'100%',
+        textAlign: 'left'
     },
 
     imgfundo: {
@@ -321,17 +325,17 @@ const styles = StyleSheet.create({
     modalcontente: {
         backgroundColor: '#0BBEE5',
         marginHorizontal: 20,
-        borderRadius: 8,
+        borderRadius: 5,
         padding: 20,
     },
 
     options: {
-        paddingVertical: 14,
         backgroundColor: 'white',
-        borderRadius: 4,
-        paddingHorizontal: '40%',
+        borderRadius: 1,
+        padding: '5%',
+        alignItems: 'center',
+        
     },
-
 });
 
 export default Cadastro;
