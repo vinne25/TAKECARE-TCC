@@ -28,8 +28,7 @@ const Login = ({ navigation }) => {
     }
 
     return (
-        <View style={styles.conteiner}>
-
+        <View style={styles.container}>
             <TouchableOpacity onPress={() => navigation.navigate('TabRoutes')}>
                 <Text style={styles.txtent}>ADM</Text>
             </TouchableOpacity>
@@ -64,7 +63,6 @@ const Login = ({ navigation }) => {
                 <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
                     <Text style={styles.signup}>Cadastre-se</Text>
                 </TouchableOpacity>
-
                 <TouchableOpacity style={styles.loginButton} onPress={signIn} disabled={loading}>
                     {loading ? (
                         <ActivityIndicator size="small" color="#FFF" />
@@ -82,11 +80,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5F5F5'
+        backgroundColor: '#F5F5F5',
     },
     logo: {
         width: '100%',
-        height: '13%',
+        height: '15%',
         marginBottom: '5%'
     },
     loginArea: {
