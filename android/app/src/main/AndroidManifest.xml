@@ -8,7 +8,9 @@
     android:roundIcon="@drawable/icon"
     android:allowBackup="false"
     android:theme="@style/AppTheme">
-   
+   <meta-data
+    android:name="com.google.android.geo.API_KEY"
+    android:value="AIzaSyDEzsQamuWnHogy2K_0lgoV68AKJpYstls"/>
 
     <activity
       android:name=".MainActivity"
