@@ -71,7 +71,6 @@ const Perfil = () => {
       }
     }
   };
-
   const handleImagePick = () => {
     launchImageLibrary({ mediaType: 'photo' }, async (response) => {
       if (response.didCancel) {
@@ -81,20 +80,23 @@ const Perfil = () => {
         Alert.alert('Erro', 'Erro ao carregar imagem.');
         return;
       }
-
+  
       try {
         const pickedUri = response.assets[0].uri;
         setImageUri(pickedUri);
-
-        // Upload da imagem no Firebase Storage
-        const imageRef = ref(storage, `profileImages/${user.uid}`);
+  
+        // Converte a URI para blob
         const img = await fetch(pickedUri);
-        const bytes = await img.blob();
-
-        await uploadBytes(imageRef, bytes);
+        const blob = await img.blob();
+  
+        // Define o caminho com a pasta "imagens" e armazena a foto de perfil
+        const imageRef = ref(storage, `image/${user.uid}`);
+        await imageRef.put(blob); // Usa `put` para enviar o blob
+        
+        // Obtém a URL de download
         const downloadUrl = await getDownloadURL(imageRef);
-
-        // Atualizando o URL da imagem no Firestore
+        
+        // Atualiza o URL da imagem no Firestore
         await updateDoc(doc(db, 'Usuarios', user.uid), { profileImage: downloadUrl });
         Alert.alert('Sucesso', 'Imagem de perfil atualizada!');
       } catch (error) {
@@ -103,7 +105,7 @@ const Perfil = () => {
       }
     });
   };
-
+  
   const addHabilidade = () => {
     if (habilidadeInput.trim()) {
       const newHabilidades = [...userData.habilidades, habilidadeInput.trim()];
