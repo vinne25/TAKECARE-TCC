@@ -5,7 +5,7 @@ import { getAuth } from '@react-native-firebase/auth';
 import { getStorage, ref, uploadBytes, getDownloadURL } from '@react-native-firebase/storage';
 import { launchImageLibrary } from 'react-native-image-picker';
 
-const Perfil = () => {
+const PerfilUsuarios = () => {
   const [userData, setUserData] = useState({});
   const [imageUri, setImageUri] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -23,7 +23,7 @@ const Perfil = () => {
     const fetchUserData = async () => {
       if (user) {
         try {
-          const docRef = doc(db, 'Babas', user.uid);
+          const docRef = doc(db, 'Usuarios', user.uid);
           const docSnap = await getDoc(docRef);
 
           if (docSnap.exists) {
@@ -55,7 +55,7 @@ const Perfil = () => {
     if (user) {
       setLoading(true);
       try {
-        const docRef = doc(db, 'Babas', user.uid);
+        const docRef = doc(db, 'Usuarios', user.uid);
         await updateDoc(docRef, {
           habilidades: userData.habilidades,
           caracteristicas: userData.caracteristicas,
@@ -98,7 +98,7 @@ const Perfil = () => {
         const downloadUrl = await getDownloadURL(imageRef);
         
         // Atualiza o URL da imagem no Firestore
-        await updateDoc(doc(db, 'Babas', user.uid), { profileImage: downloadUrl });
+        await updateDoc(doc(db, 'Usuarios', user.uid), { profileImage: downloadUrl });
         Alert.alert('Sucesso', 'Imagem de perfil atualizada!');
       } catch (error) {
         Alert.alert('Erro', 'Falha ao carregar a imagem.');
@@ -265,4 +265,4 @@ const styles = {
   buttonText: { color: '#fff', fontWeight: 'bold' },
 };
 
-export default Perfil;
+export default PerfilUsuarios;

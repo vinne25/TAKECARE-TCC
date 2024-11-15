@@ -26,6 +26,34 @@ const Cadastro = ({ navigation }) => {
     const [nascimento, setNascimento] = useState('');
     const [cep, setCep] = useState('');
     const [loading, setLoading] = useState(false);
+    const [isBaba, setIsBaba] = useState(false); // Variável para determinar se o usuário é babá
+    const [selectedSexuality, setSelectedSexuality] = useState(null);
+    const [visible, setVisible] = useState(false);
+
+    const data = [
+        { id: '1', label: 'Masculino'},
+        { id: '2', label: 'Feminino'},
+        { id: '3', label: 'Outro' }
+    ];
+
+    const handleButtonPress = (label) => {
+        setSelectedSexuality(label);
+        setSexo(label);
+    };
+
+    const toggleList = () => {
+        setVisible(!visible);
+    };
+
+    const handleSelect = () => {
+        setVisible(false)
+    };
+
+    const renderItem = ({ item }) => (
+        <TouchableOpacity style={styles.options} onPress={() => { handleButtonPress(item.label); handleSelect() }}>
+            <Text>{item.label}</Text>
+        </TouchableOpacity>
+    );
 
     const signUp = async () => {
         if (email === '' || password === '' || confirmPassword === '' || name === '' || cpf === '' || sexo === '' || nascimento === '' || cep === '') {
@@ -43,18 +71,24 @@ const Cadastro = ({ navigation }) => {
             const userCredential = await auth().createUserWithEmailAndPassword(email, password);
             const uid = userCredential.user.uid;
 
-            await firestore().collection('Usuarios').doc(uid).set({
+            // Determinar a coleção com base no tipo de usuário
+            const collectionName = isBaba ? 'Babas' : 'Usuarios';
+
+            // Salvar dados do usuário na coleção correta
+            await firestore().collection(collectionName).doc(uid).set({
                 name: name,
                 email: email,
                 cpf: cpf,
                 sexo: sexo,
                 nascimento: nascimento,
                 cep: cep,
+                isBaba: isBaba, // Define se o usuário é babá ou não
                 createdAt: firestore.FieldValue.serverTimestamp(),
             });
 
             setLoading(false);
             Alert.alert('Sucesso', 'Usuário registrado com sucesso!');
+            navigation.navigate('MAPA');  // ou a tela que você deseja navegar após o cadastro
         } catch (error) {
             setLoading(false);
             handleFirebaseError(error);
@@ -70,36 +104,6 @@ const Cadastro = ({ navigation }) => {
             Alert.alert('Erro', 'Ocorreu um erro inesperado. Tente novamente.');
         }
     };
-
-    const [selectedSexuality, setSelectedSexuality] = useState(null);
-    const [visible, setVisible] = useState(false);
-
-    const data = [
-        { id: '1', label: 'Masculino'},
-        { id: '2', label: 'Feminino'},
-        { id: '3', label: 'Outro' }
-    ];
-
-    const handleButtonPress = (label) => {
-        setSelectedSexuality(label);
-        setSexo(label);
-        
-    };
-
-    const toggleList = () => {
-        setVisible(!visible);
-    };
-
-    const handleSelect = () => {
-        setVisible(false)
-        
-    };
-
-    const renderItem = ({ item }) => (
-        <TouchableOpacity style={styles.options} onPress={() => { handleButtonPress(item.label); handleSelect() }}>
-            <Text>{item.label}</Text>
-        </TouchableOpacity>
-    );
 
     return (
         <View>
@@ -175,7 +179,7 @@ const Cadastro = ({ navigation }) => {
                                 <TouchableOpacity style={styles.modalcontainer} activeOpacity={1}>
                                     <TouchableOpacity style={styles.modalcontente} activeOpacity={1} >
                                         <FlatList
-                                        style={styles.FlatList}
+                                            style={styles.FlatList}
                                             data={data}
                                             renderItem={renderItem}
                                             keyExtractor={item => item.id} />
@@ -202,6 +206,19 @@ const Cadastro = ({ navigation }) => {
                             value={cep}
                         />
 
+                        {/* Checkbox para selecionar se é babá */}
+                        <View style={styles.checkboxContainer}>
+                            <Text style={styles.label}>Sou babá</Text>
+                            <TouchableOpacity 
+                                style={styles.checkbox} 
+                                onPress={() => setIsBaba(prevState => !prevState)}
+                            >
+                                <Text style={styles.checkboxText}>
+                                    {isBaba ? '✔' : '❌'}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+
                         <TouchableOpacity style={styles.signupButton} onPress={signUp} disabled={loading}>
                             {loading ? (
                                 <ActivityIndicator size="small" color="#FFF" />
@@ -224,9 +241,9 @@ const styles = StyleSheet.create({
         position: 'absolute',
         flex: 1,
         alignSelf: 'center',
-        width: '90%', // Ajustado para um pouco mais estreito
+        width: '90%',
         height: '94%',
-        backgroundColor: 'rgba(255, 255, 255, 0.9)', // Levemente transparente para o fundo
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
         borderRadius: 10,
         padding: 20,
         shadowColor: '#000',
@@ -234,23 +251,21 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         elevation: 5,
     },
-    FlatList:{
-        width:'100%',
+    FlatList: {
+        width: '100%',
         textAlign: 'left'
     },
-
     imgfundo: {
         width: '100%',
         height: '100%',
     },
-
     logo: {
         width: '100%',
-        height: 100, // Ajustado para uma altura fixa
-        marginBottom: 20, // Mais espaçamento embaixo
+        height: 100,
+        marginBottom: 20,
     },
     scrollContainer: {
-        paddingHorizontal: 0, // Removido padding horizontal do ScrollView
+        paddingHorizontal: 0,
     },
     cadastroArea: {
         backgroundColor: '#FFF',
@@ -262,80 +277,88 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     title: {
-        fontSize: 26, // Aumentado para destaque
+        fontSize: 26,
         fontWeight: 'bold',
         marginBottom: 20,
-        textAlign: 'center', // Centralizado
-        color: 'black',
+        textAlign: 'center',
     },
     label: {
+        fontSize: 14,
         fontWeight: 'bold',
-        fontSize: 16,
+        marginBottom: 8,
         color: '#333',
-        marginBottom: 8, // Espaçamento consistente
     },
     input: {
-        height: 45, // Aumentado para facilitar a digitação
-        borderColor: '#CCC',
+        height: 45,
+        borderColor: '#ddd',
         borderWidth: 1,
         borderRadius: 5,
-        paddingHorizontal: 10,
         marginBottom: 15,
+        paddingHorizontal: 10,
+    },
+    checkboxContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 15,
+    },
+    checkbox: {
+        marginLeft: 10,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 5,
+        padding: 10,
+    },
+    checkboxText: {
+        fontSize: 18,
+        color: '#333',
     },
     signupButton: {
         backgroundColor: '#0BBEE5',
+        paddingVertical: 15,
         borderRadius: 5,
-        height: 50, // Aumentado para melhorar a acessibilidade
-        justifyContent: 'center',
+        marginBottom: 15,
         alignItems: 'center',
-        marginTop: 20, // Mais espaço em cima
     },
     signupButtonText: {
         color: '#FFF',
-        fontSize: 18, // Aumentado para melhor leitura
+        fontSize: 16,
         fontWeight: 'bold',
     },
     backToLogin: {
         color: '#0BBEE5',
-        marginTop: 15,
         textAlign: 'center',
-        fontSize: 16, // Ajustado para harmonizar com o resto
+        fontSize: 14,
     },
-
-    gnrbtn:{
-        alignItems: 'center',
-        flexDirection: 'row',
+    gnrtxt: {
+        fontSize: 14,
+        marginLeft: 10
+    },
+    gnrbtn: {
+        width: '100%',
+        height: 40,
         borderWidth: 1,
-        borderColor: '#CCC',
-        borderRadius: 4,
-        paddingHorizontal: 10,
-        height: 45,
-        marginBottom: 15,
+        justifyContent: 'center',
+        borderRadius: 5,
+        borderColor: '#ddd',
+        marginBottom: 15
     },
-
-    gnrtxt:{
-    },
-
     modalcontainer: {
-        backgroundColor: 'rgba(0,0,0, 0.5)',
         flex: 1,
         justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
-
     modalcontente: {
-        backgroundColor: '#0BBEE5',
-        marginHorizontal: 20,
-        borderRadius: 5,
+        width: '80%',
+        backgroundColor: '#FFF',
+        borderRadius: 10,
         padding: 20,
     },
-
     options: {
-        backgroundColor: 'white',
-        borderRadius: 1,
-        padding: '5%',
-        alignItems: 'center',
-        
-    },
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd',
+    }
 });
 
 export default Cadastro;
