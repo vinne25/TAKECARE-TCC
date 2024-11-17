@@ -81,15 +81,15 @@ const Perfil = () => {
         Alert.alert('Erro', 'Erro ao carregar imagem.');
         return;
       }
-  
+
       try {
         const pickedUri = response.assets[0].uri;
         setImageUri(pickedUri);
-  
+
         // Converte a URI para blob
         const img = await fetch(pickedUri);
         const blob = await img.blob();
-  
+
         // Define o caminho com a pasta "imagens" e armazena a foto de perfil
         const imageRef = ref(storage, `image/${user.uid}`);
         await imageRef.put(blob); // Usa `put` para enviar o blob
@@ -124,6 +124,11 @@ const Perfil = () => {
       setUserData({ ...userData, habilidades: newHabilidades });
       setHabilidadeInput('');
     }
+  };
+
+  const removeHabilidade = (habilidade) => {
+    const newHabilidades = userData.habilidades.filter(h => h !== habilidade);
+    setUserData({ ...userData, habilidades: newHabilidades });
   };
 
   const addCaracteristica = () => {
@@ -212,7 +217,12 @@ const Perfil = () => {
           </View>
         ) : (
           (userData.habilidades || []).map((habilidade, index) => (
-            <Text key={index}>{habilidade}</Text>
+            <View key={index} style={styles.habilidadeContainer}>
+              <Text>{habilidade}</Text>
+              <TouchableOpacity onPress={() => removeHabilidade(habilidade)} style={styles.removeButton}>
+                <Text style={styles.buttonText}>Excluir</Text>
+              </TouchableOpacity>
+            </View>
           ))
         )}
 
@@ -236,33 +246,105 @@ const Perfil = () => {
           ))
         )}
 
-        {/* Botão para Logout */}
-        <TouchableOpacity onPress={handleLogout} style={[styles.button, { backgroundColor: '#e57373' }]}>
-          <Text style={styles.buttonText}>Sair</Text>
-        </TouchableOpacity>
-
-        {/* Botão para atualizar o perfil (se estiver em modo de edição) */}
+        {/* Botões de Ação */}
         {isEditing ? (
-          <TouchableOpacity onPress={handleUpdate} style={styles.button}>
-            <Text style={styles.buttonText}>Salvar</Text>
-          </TouchableOpacity>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={handleUpdate} style={styles.saveButton}>
+              <Text style={styles.buttonText}>Salvar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setIsEditing(false)} style={styles.cancelButton}>
+              <Text style={styles.buttonText}>Cancelar</Text>
+            </TouchableOpacity>
+          </View>
         ) : (
-          <TouchableOpacity onPress={() => setIsEditing(true)} style={styles.button}>
+          <TouchableOpacity onPress={() => setIsEditing(true)} style={styles.editButton}>
             <Text style={styles.buttonText}>Editar</Text>
           </TouchableOpacity>
         )}
       </View>
+      {/* Logout */}
+      <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+        <Text style={styles.buttonText}>Sair</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
 
 const styles = {
-  title: { fontSize: 20, fontWeight: 'bold', marginVertical: 10 },
-  input: { height: 40, borderColor: '#ddd', borderWidth: 1, marginVertical: 5, paddingHorizontal: 10, borderRadius: 5 },
-  inputMultiline: { height: 100, borderColor: '#ddd', borderWidth: 1, marginVertical: 5, paddingHorizontal: 10, borderRadius: 5, textAlignVertical: 'top' },
-  section: { flexDirection: 'row', marginVertical: 5 },
-  button: { backgroundColor: '#00796b', paddingVertical: 10, borderRadius: 5, alignItems: 'center', marginTop: 10 },
-  buttonText: { color: '#fff', fontWeight: 'bold' },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginVertical: 10,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 10,
+    marginVertical: 10,
+    borderRadius: 5,
+  },
+  inputMultiline: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 10,
+    marginVertical: 10,
+    borderRadius: 5,
+    height: 100,
+    textAlignVertical: 'top',
+  },
+  button: {
+    backgroundColor: '#00aaff',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontWeight: 'bold',
+  },
+  habilidadeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 5,
+  },
+  removeButton: {
+    backgroundColor: '#e57373',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  saveButton: {
+    backgroundColor: '#4caf50',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  cancelButton: {
+    backgroundColor: '#f44336',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  editButton: {
+    backgroundColor: '#2196f3',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  logoutButton: {
+    backgroundColor: '#f44336',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 20,
+  },
 };
 
 export default Perfil;
