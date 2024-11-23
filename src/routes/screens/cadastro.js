@@ -11,10 +11,12 @@ import {
     ScrollView,
     Alert,
     ActivityIndicator,
+    Button
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import axios from 'axios';
 
 const Cadastro = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -25,14 +27,19 @@ const Cadastro = ({ navigation }) => {
     const [sexo, setSexo] = useState('');
     const [nascimento, setNascimento] = useState('');
     const [cep, setCep] = useState('');
+    const [logradouro, setLogradouro] = useState('');
+    const [bairro, setBairro] = useState('');
+    const [localidade, setLocalidade] = useState('');
+    const [uf, setUf] = useState('');
     const [loading, setLoading] = useState(false);
-    const [isBaba, setIsBaba] = useState(false); // Variável para determinar se o usuário é babá
+    const [isBaba, setIsBaba] = useState(false);
     const [selectedSexuality, setSelectedSexuality] = useState(null);
     const [visible, setVisible] = useState(false);
+    const [isLoadingCep, setIsLoadingCep] = useState(false);
 
     const data = [
-        { id: '1', label: 'Masculino'},
-        { id: '2', label: 'Feminino'},
+        { id: '1', label: 'Masculino' },
+        { id: '2', label: 'Feminino' },
         { id: '3', label: 'Outro' }
     ];
 
@@ -46,7 +53,7 @@ const Cadastro = ({ navigation }) => {
     };
 
     const handleSelect = () => {
-        setVisible(false)
+        setVisible(false);
     };
 
     const renderItem = ({ item }) => (
@@ -54,6 +61,36 @@ const Cadastro = ({ navigation }) => {
             <Text>{item.label}</Text>
         </TouchableOpacity>
     );
+
+    const buscarCep = async (cep) => {
+        if (!cep || cep.length !== 8) {
+            Alert.alert('Erro', 'CEP deve ter 8 dígitos');
+            return;
+        }
+
+        setIsLoadingCep(true);
+        try {
+            const response = await axios.get(`https://brasilapi.com.br/api/cep/v2/${cep}`);
+            const { street, neighborhood, city, state } = response.data;
+
+            setLogradouro(street);
+            setBairro(neighborhood);
+            setLocalidade(city);
+            setUf(state);
+        } catch (error) {
+            Alert.alert('Erro', 'Não foi possível encontrar o CEP');
+            console.error('Erro ao buscar o CEP:', error);
+        } finally {
+            setIsLoadingCep(false);
+        }
+    };
+
+    const handleCepChange = (text) => {
+        setCep(text);
+        if (text.length === 8) {
+            buscarCep(text);
+        }
+    };
 
     const signUp = async () => {
         if (email === '' || password === '' || confirmPassword === '' || name === '' || cpf === '' || sexo === '' || nascimento === '' || cep === '') {
@@ -71,10 +108,8 @@ const Cadastro = ({ navigation }) => {
             const userCredential = await auth().createUserWithEmailAndPassword(email, password);
             const uid = userCredential.user.uid;
 
-            // Determinar a coleção com base no tipo de usuário
             const collectionName = isBaba ? 'Babas' : 'Usuarios';
 
-            // Salvar dados do usuário na coleção correta
             await firestore().collection(collectionName).doc(uid).set({
                 name: name,
                 email: email,
@@ -82,13 +117,17 @@ const Cadastro = ({ navigation }) => {
                 sexo: sexo,
                 nascimento: nascimento,
                 cep: cep,
-                isBaba: isBaba, // Define se o usuário é babá ou não
+                logradouro: logradouro,
+                bairro: bairro,
+                localidade: localidade,
+                uf: uf,
+                isBaba: isBaba,
                 createdAt: firestore.FieldValue.serverTimestamp(),
             });
 
             setLoading(false);
             Alert.alert('Sucesso', 'Usuário registrado com sucesso!');
-            navigation.navigate('MAPA');  // ou a tela que você deseja navegar após o cadastro
+            navigation.navigate('MAPA');
         } catch (error) {
             setLoading(false);
             handleFirebaseError(error);
@@ -107,16 +146,9 @@ const Cadastro = ({ navigation }) => {
 
     return (
         <View>
-            <Image
-                source={require('../../../assets/Imagem/tamanho2.jpg')}
-                style={styles.imgfundo}
-            />
+            <Image source={require('../../../assets/Imagem/tamanho2.jpg')} style={styles.imgfundo} />
             <View style={styles.container}>
-                <Image
-                    source={require('../../../assets/Imagem/logotk.png')}
-                    style={styles.logo}
-                    resizeMode="contain"
-                />
+                <Image source={require('../../../assets/Imagem/logotk.png')} style={styles.logo} resizeMode="contain" />
                 <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
                     <SafeAreaView style={styles.cadastroArea}>
                         <Text style={styles.title}>Cadastro</Text>
@@ -165,24 +197,23 @@ const Cadastro = ({ navigation }) => {
                             onChangeText={setCpf}
                             value={cpf}
                         />
-                        <Text style={styles.label}> Gênero </Text>
+
+                        <Text style={styles.label}>Gênero</Text>
                         <TouchableOpacity style={styles.gnrbtn} onPress={toggleList}>
-                            <Text style={styles.gnrtxt}> Selecione seu Gênero: </Text>
-                            {selectedSexuality && (
-                                <Text style={styles.gnrtxt}>
-                                    {selectedSexuality}
-                                </Text>
-                            )}
+                            <Text style={styles.gnrtxt}>Selecione seu Gênero</Text>
+                            {selectedSexuality && <Text style={styles.gnrtxt}>{selectedSexuality}</Text>}
                         </TouchableOpacity>
-                        {(visible &&
+
+                        {visible && (
                             <Modal visible={true} animationType='fade' transparent={true} onRequestClose={() => { }}>
                                 <TouchableOpacity style={styles.modalcontainer} activeOpacity={1}>
-                                    <TouchableOpacity style={styles.modalcontente} activeOpacity={1} >
+                                    <TouchableOpacity style={styles.modalcontente} activeOpacity={1}>
                                         <FlatList
                                             style={styles.FlatList}
                                             data={data}
                                             renderItem={renderItem}
-                                            keyExtractor={item => item.id} />
+                                            keyExtractor={item => item.id}
+                                        />
                                     </TouchableOpacity>
                                 </TouchableOpacity>
                             </Modal>
@@ -202,29 +233,51 @@ const Cadastro = ({ navigation }) => {
                             style={styles.input}
                             placeholder="Digite seu CEP"
                             keyboardType="numeric"
-                            onChangeText={setCep}
+                            maxLength={8}
                             value={cep}
+                            onChangeText={handleCepChange}
+                        />
+                        {isLoadingCep && <Text>Buscando dados...</Text>}
+
+                        <Text style={styles.label}>Rua</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={logradouro}
+                            editable={false}
                         />
 
-                        {/* Checkbox para selecionar se é babá */}
+                        <Text style={styles.label}>Bairro</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={bairro}
+                            editable={false}
+                        />
+
+                        <Text style={styles.label}>Cidade</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={localidade}
+                            editable={false}
+                        />
+
+                        <Text style={styles.label}>Estado</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={uf}
+                            editable={false}
+                        />
+
                         <View style={styles.checkboxContainer}>
                             <Text style={styles.label}>Sou babá</Text>
-                            <TouchableOpacity 
-                                style={styles.checkbox} 
-                                onPress={() => setIsBaba(prevState => !prevState)}
-                            >
+                            <TouchableOpacity style={styles.checkbox} onPress={() => setIsBaba(prevState => !prevState)}>
                                 <Text style={styles.checkboxText}>
-                                    {isBaba ? '✔' : '❌'}
+                                    {isBaba ? 'Sim' : 'Não'}
                                 </Text>
                             </TouchableOpacity>
                         </View>
 
-                        <TouchableOpacity style={styles.signupButton} onPress={signUp} disabled={loading}>
-                            {loading ? (
-                                <ActivityIndicator size="small" color="#FFF" />
-                            ) : (
-                                <Text style={styles.signupButtonText}>Cadastrar</Text>
-                            )}
+                        <TouchableOpacity style={styles.button} onPress={signUp}>
+                            {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Cadastrar</Text>}
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                             <Text style={styles.backToLogin}>Voltar ao login</Text>
@@ -358,7 +411,20 @@ const styles = StyleSheet.create({
         padding: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#ddd',
-    }
+    },
+    button: {
+        width: '100%',
+        backgroundColor: '#2e86de',
+        padding: 15,
+        borderRadius: 5,
+        alignItems: 'center',
+        marginTop: 20,
+    },
+    buttonText: {
+        fontSize: 16,
+        color: '#fff',
+        fontWeight: 'bold',
+    },
 });
 
 export default Cadastro;
