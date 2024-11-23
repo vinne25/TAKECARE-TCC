@@ -29,9 +29,6 @@ const Login = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={() => navigation.navigate('TabRoutes')}>
-                <Text style={styles.txtent}>ADM</Text>
-            </TouchableOpacity>
             <Image
                 source={require('../../../assets/Imagem/logotk.png')}
                 style={styles.logo}
