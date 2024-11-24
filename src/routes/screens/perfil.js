@@ -186,8 +186,8 @@ const Perfil = () => {
               style={styles.input}
             />
             <TextInput
-              value={userData.about}
-              onChangeText={(text) => setUserData({ ...userData, about: text })}
+              value={userData.descricao}
+              onChangeText={(text) => setUserData({ ...userData, descricao: text })}
               placeholder="Sobre mim"
               multiline
               style={styles.inputMultiline}
@@ -197,7 +197,7 @@ const Perfil = () => {
           <>
             <Text>{userData.name || 'Nome do Usuário'}</Text>
             <Text>{userData.idade ? `${userData.idade} anos` : 'Idade não informada'}</Text>
-            <Text>{userData.about || 'Sobre mim não informado'}</Text>
+            <Text>{userData.descricao || 'Sobre mim não informado'}</Text>
           </>
         )}
 
