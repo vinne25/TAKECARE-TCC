@@ -40,7 +40,7 @@ const StackRoutes = () => {
         console.log('Verificando coleção Usuarios:', usuarioDoc.exists);
 
         if (usuarioDoc.exists) {
-          console.log('Usuário é normal');
+          console.log('Usuário Contrante');
           setUserType('normal');
         } else {
           console.log('Usuário não encontrado em nenhuma coleção');
@@ -75,7 +75,7 @@ const StackRoutes = () => {
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#0BBEE5" />
         <Text>Carregando...</Text>
       </View>
     );
