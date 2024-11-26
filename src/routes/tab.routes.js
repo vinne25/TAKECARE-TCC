@@ -22,7 +22,7 @@ const TabRoutes = ({ route }) => {
   }
 
   return (
-    <Tab.Navigator screenOptions={{ tabBarActiveTintColor: '#0BBEE5', tabBarInactiveTintColor: 'gray' }}>
+    <Tab.Navigator initialRouteName='MAPA' screenOptions={{ tabBarActiveTintColor: '#0BBEE5', tabBarInactiveTintColor: 'gray' }}>
       <Tab.Screen
         name="FAVORITOS"
         component={Favoritos}
