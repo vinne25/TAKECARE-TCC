@@ -3,7 +3,8 @@ import MapView, { Marker } from 'react-native-maps';
 import { StyleSheet, View, ActivityIndicator, Image, Text, Dimensions, TouchableOpacity } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
-import CustomMarkerImage from '../../../assets/Imagem/logotk.png'; // Imagem do marcador no mapa
+import { SvgXml } from 'react-native-svg'; 
+import logomarker from '../../../assets/Imagem/logotk.png'
 
 const { width } = Dimensions.get('window'); // Pega a largura da tela
 
@@ -11,8 +12,10 @@ const App = () => {
   const [dados, setDados] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [favoritos, setFavoritos] = useState([]); // Estado para armazenar favoritos do usuário
 
   useEffect(() => {
+    // Carregar os dados das babás
     const unsubscribe = firestore()
       .collection("Babas")
       .onSnapshot(querySnapshot => {
@@ -32,6 +35,19 @@ const App = () => {
         console.error("Erro ao buscar dados: ", error);
         setLoading(false);
       });
+
+    // Carregar favoritos do usuário
+    const userId = auth().currentUser?.uid;
+    if (userId) {
+      firestore()
+        .collection('Favoritos')
+        .where('userId', '==', userId)
+        .get()
+        .then(querySnapshot => {
+          const favoritosData = querySnapshot.docs.map(doc => doc.data().babáId);
+          setFavoritos(favoritosData);
+        });
+    }
 
     return () => unsubscribe();
   }, []);
@@ -73,6 +89,7 @@ const App = () => {
             })
             .then(() => {
               console.log('Babá adicionada aos favoritos!');
+              setFavoritos(prev => [...prev, babáId]); // Atualizar o estado de favoritos
             })
             .catch(error => {
               console.error('Erro ao adicionar aos favoritos:', error);
@@ -86,6 +103,7 @@ const App = () => {
               .delete()
               .then(() => {
                 console.log('Babá removida dos favoritos!');
+                setFavoritos(prev => prev.filter(id => id !== babáId)); // Atualizar o estado de favoritos
               })
               .catch(error => {
                 console.error('Erro ao remover dos favoritos:', error);
@@ -102,6 +120,20 @@ const App = () => {
     return anos === 1 ? `${anos} Ano` : `${anos} Anos`;
   };
 
+  const heartEmptySvg = `
+   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#0BBEE5" width="30px" height="30px">
+      <path d="M0 0h24v24H0z" fill="none"/>
+      <path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/>
+    </svg>
+  `;
+  
+  const heartFilledSvg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#0BBEE5" width="30px" height="30px">
+      <path d="M0 0h24v24H0z" fill="none"/>
+      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+    </svg>
+  `;
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -110,14 +142,15 @@ const App = () => {
       </View>
     );
   }
+  
 
   return (
     <View style={styles.container}>
       <MapView
         style={styles.mapa}
         initialRegion={{
-          latitude: -23.550935,
-          longitude: -46.634257,
+          latitude: -23.510116260446033,
+          longitude: -46.865254653521944,
           latitudeDelta: 0.0091,
           longitudeDelta: 0.0135,
         }}
@@ -131,7 +164,7 @@ const App = () => {
                 longitude: item.localidade.longitude,
               }}
               onPress={() => handleMarkerPress(item)}
-              icon={CustomMarkerImage} // Substitua por sua própria imagem de marcador
+              icon={logomarker} 
             />
           )
         ))}
@@ -148,8 +181,11 @@ const App = () => {
             descricao={selectedItem.descricao}
             imagem={selectedItem.imagem}
             onFavoritePress={handleFavoritePress}
-            babáId={selectedItem.id} // Passando o ID da babá para a função
+            babáId={selectedItem.id} 
             formatExperiencia={formatExperiencia}
+            isFavorited={favoritos.includes(selectedItem.id)} 
+            heartEmptySvg={heartEmptySvg}
+            heartFilledSvg={heartFilledSvg}
           />
         </View>
       )}
@@ -157,7 +193,7 @@ const App = () => {
   );
 };
 
-const Card = ({ nome, valor, avaliacao, experiencia, descricao, imagem, onFavoritePress, babáId, formatExperiencia }) => {
+const Card = ({ nome, valor, avaliacao, experiencia, descricao, imagem, onFavoritePress, babáId, formatExperiencia, isFavorited, heartEmptySvg, heartFilledSvg }) => {
   return (
     <View style={styles.card}>
       <Image source={{ uri: imagem }} style={styles.image} />
@@ -178,7 +214,7 @@ const Card = ({ nome, valor, avaliacao, experiencia, descricao, imagem, onFavori
           </Text>
         </View>
         <TouchableOpacity style={styles.favoriteButton} onPress={() => onFavoritePress(babáId)}>
-          <Text style={styles.favoriteText}>❤️</Text>
+          <SvgXml xml={isFavorited ? heartFilledSvg : heartEmptySvg} />
         </TouchableOpacity>
       </View>
     </View>
@@ -269,13 +305,9 @@ const styles = StyleSheet.create({
   },
   favoriteButton: {
     position: 'absolute',
-    top: 0,
-    right: 5,
-    padding: 10,
-  },
-  favoriteText: {
-    fontSize: 30,
-    color: '#F00',
+    top: -5,
+    right: 0,
+    padding: 2,
   },
 });
 

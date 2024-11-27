@@ -1,71 +1,141 @@
-import React, { useState, useEffect, useCallback, useLayoutEffect} from 'react';
-//import {collection, addDoc, orderBy, query, onSnapshot} from '@react-native-firebase/firestore';
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Image } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
-const Chat = () => {
+const Chat = ({ route }) => {
+  const { chatId, babáId } = route.params;  // Recebe os parâmetros passados
 
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
-  const chatRef = firestore().collection('chats');
+  const [user, setUser] = useState(null); // Usuário logado
+  const [userProfileImage, setUserProfileImage] = useState(''); // Imagem de perfil do usuário
+  const [babáProfileImage, setBabáProfileImage] = useState(''); // Imagem de perfil da babá
+  const flatListRef = useRef(); // Referência para o FlatList
 
+  // Obter o usuário logado
   useEffect(() => {
-    // Escuta em tempo real para mensagens novas
-    const unsubscribe = chatRef
-      .orderBy('createdAt', 'desc')
-      .onSnapshot((querySnapshot) => {
-        const messagesFirestore = querySnapshot.docs.map((doc) => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            text: data.text,
-            createdAt: data.createdAt.toDate(),
-            user: data.user,
-          };
+    const currentUser = auth().currentUser;
+    if (currentUser) {
+      setUser(currentUser);
+
+      // Buscar a imagem de perfil do usuário logado na coleção 'usuarios' ou 'babas'
+      const userCollection = babáId ? 'babas' : 'usuarios';
+      firestore()
+        .collection(userCollection)
+        .doc(currentUser.uid) // Obtendo o documento do usuário logado
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            const userData = doc.data();
+            setUserProfileImage(userData.profileImage); // Pega a URL da imagem de perfil
+          }
         });
-        setMessages(messagesFirestore);
-      });
+    }
+  }, [babáId]);
 
-    // Limpeza da escuta
-    return () => unsubscribe();
-  }, []);
+  // Buscar as mensagens do Firestore, agora ordenadas de forma crescente (mais antigas primeiro)
+  useEffect(() => {
+    if (chatId) {
+      const unsubscribe = firestore()
+        .collection('chats')
+        .doc(chatId)  // Usando chatId
+        .collection('messages')
+        .orderBy('createdAt', 'asc')  // Ordenando por data, mais recentes primeiro
+        .onSnapshot((querySnapshot) => {
+          const messagesFirestore = querySnapshot.docs.map((doc) => doc.data());
+          setMessages(messagesFirestore);
+        });
 
+      return () => unsubscribe();
+    }
+  }, [chatId]);
+
+  // Enviar mensagem
   const sendMessage = async () => {
     if (inputText.trim() === '') return;
 
     const newMessage = {
       text: inputText,
       createdAt: new Date(),
-      user: { id: 1, name: 'Você' },
+      user: { id: user.uid, name: user.displayName || 'Você', profileImage: userProfileImage }, // Inclui a foto do usuário
     };
 
-    // Salva a mensagem no Firestore
-    await chatRef.add(newMessage);
-    setInputText('');
+    await firestore()
+      .collection('chats')
+      .doc(chatId)
+      .collection('messages')
+      .add(newMessage);
+
+    setInputText('');  // Limpa o campo de texto após enviar a mensagem
   };
 
-  const renderMessageItem = ({ item }) => (
-    <View style={styles.messageContainer}>
-      <Text style={styles.messageUser}>{item.user.name}:</Text>
-      <Text style={styles.messageText}>{item.text}</Text>
-    </View>
-  );
+  // Função para formatar a hora da mensagem
+  const formatTime = (date) => {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    return `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
+  };
+
+  // Renderizar cada item (mensagem)
+  const renderMessageItem = ({ item }) => {
+    const isCurrentUser = item.user.id === user.uid;  // Verifica se a mensagem é do usuário logado
+    const messageTime = formatTime(item.createdAt.toDate()); // Formata o horário da mensagem
+
+    return (
+      <View 
+        style={[
+          styles.messageContainer,
+          { alignSelf: isCurrentUser ? 'flex-end' : 'flex-start' },  // Alinha à direita para o usuário logado, esquerda para o outro
+          isCurrentUser ? styles.currentUserMessage : styles.otherUserMessage  // Estilos diferentes para cada usuário
+        ]}
+      >
+        {/* Exibir a imagem do outro usuário em um círculo (só mostra para o outro usuário) */}
+        {!isCurrentUser && (
+          <Image 
+            source={{ uri: item.user.profileImage || 'https://firebasestorage.googleapis.com/v0/b/takecare-dfb73.appspot.com/o/image%2F313BJyoDZQdCrD4TAYxpfes0krw1?alt=media&token=9db7dd13-208b-431b-a241-05c7b0fbb57c' }}  // Foto do usuário ou imagem padrão
+            style={styles.avatar}
+          />
+        )}
+        <View style={styles.textContainer}>
+          <Text style={styles.messageUser}>{item.user.name}:</Text>
+          <Text style={styles.messageText}>{item.text}</Text>
+        </View>
+        {/* Hora da mensagem */}
+        <Text style={styles.messageTime}>{messageTime}</Text>
+      </View>
+    );
+  };
+
+  // Scroll automático para a última mensagem
+  useEffect(() => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToEnd({ animated: true });
+    }
+  }, [messages]);  // Sempre que a lista de mensagens mudar
+
+  if (!user || !chatId) {
+    return <Text>Carregando...</Text>;
+  }
 
   return (
     <View style={styles.container}>
+      {/* Lista de mensagens */}
       <FlatList
+        ref={flatListRef}
         data={messages}
         renderItem={renderMessageItem}
-        keyExtractor={(item) => item.id}
-        inverted
+        keyExtractor={(item, index) => index.toString()}
       />
 
+      {/* Campo de input e botão de envio */}
       <View style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { height: Math.max(40, inputText.split('\n').length * 20) }]}  // Ajusta altura do campo de input conforme o conteúdo
           value={inputText}
           onChangeText={setInputText}
           placeholder="Digite sua mensagem"
+          multiline
         />
         <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
           <Text style={styles.sendButtonText}>Enviar</Text>
@@ -87,19 +157,49 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginHorizontal: 10,
     borderRadius: 8,
+    alignItems: 'flex-start',
+    flexShrink: 1,  // O balão vai se ajustar ao tamanho do texto
+    paddingHorizontal: 10, // Adicionando algum padding para melhorar a estética
+    minWidth: 50, // Largura mínima para não ficar muito pequeno
+    maxWidth: '80%', // Limitar a largura do balão, mas sem ser 80% fixo
+  },
+  currentUserMessage: {
+    backgroundColor: '#a7d7e6', // Cor de fundo para mensagens do usuário logado
+    borderBottomRightRadius: 0,
+  },
+  otherUserMessage: {
+    backgroundColor: '#E6E6E6', // Cor de fundo para mensagens do outro usuário
+    borderBottomLeftRadius: 0,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,  // Tornando a imagem circular
+    marginRight: 10,
+  },
+  textContainer: {
+    flex: 1,
   },
   messageUser: {
     fontWeight: 'bold',
-    marginRight: 5,
+    color: '#000',
   },
   messageText: {
-    flex: 1,
+    marginTop: 5,
+    color: '#000',
+  },
+  messageTime: {
+    fontSize: 12,
+    color: '#666',
+    alignSelf: 'flex-end',  // Hora sempre no final da mensagem
+    marginTop: 5,
+    marginLeft: 10,  // Separação entre o texto e o horário
   },
   inputContainer: {
     flexDirection: 'row',
     padding: 10,
     borderTopWidth: 1,
-    borderTopColor: '#cccccc',
+    borderTopColor: '#a7d7e6',
     backgroundColor: '#ffffff',
   },
   input: {
@@ -114,7 +214,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 15,
     marginLeft: 5,
-    backgroundColor: '#007bff',
+    backgroundColor: '#0BBEE5',
     borderRadius: 8,
   },
   sendButtonText: {

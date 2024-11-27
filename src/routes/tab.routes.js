@@ -13,7 +13,13 @@ const TabRoutes = ({ route }) => {
   const userType = route?.params?.userType;
 
   return (
-    <Tab.Navigator screenOptions={{ tabBarActiveTintColor: '#0BBEE5', tabBarInactiveTintColor: 'gray' }}>
+    <Tab.Navigator 
+      screenOptions={{
+        tabBarActiveTintColor: '#0BBEE5', 
+        tabBarInactiveTintColor: 'gray',
+        headerShown: false, // Remove o cabeçalho de todas as telas
+      }}
+    >
       <Tab.Screen
         name="FAVORITOS"
         component={Favoritos}

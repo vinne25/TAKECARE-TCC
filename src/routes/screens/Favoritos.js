@@ -3,10 +3,12 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, Alert } from
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useNavigation } from '@react-navigation/native'; // Importando o hook de navegação
 
 const FavoritosScreen = () => {
   const [favoritos, setFavoritos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigation = useNavigation(); // Hook para navegação
 
   useEffect(() => {
     const userId = auth().currentUser?.uid;
@@ -79,8 +81,12 @@ const FavoritosScreen = () => {
   };
 
   const handleChatPress = (babáId) => {
-    // Navegue para a tela de chat com a babá (a implementação de navegação depende do seu setup)
-    console.log('Iniciar chat com a babá:', babáId);
+    // Aqui vamos gerar um chatId único para o usuário e a babá
+    const userId = auth().currentUser?.uid;
+    const chatId = userId < babáId ? `${userId}-${babáId}` : `${babáId}-${userId}`;
+    
+    // Navega para a tela de chat e passa o chatId e babáId como parâmetros
+    navigation.navigate('CHAT', { chatId, babáId });
   };
 
   const renderItem = ({ item }) => (
@@ -100,7 +106,7 @@ const FavoritosScreen = () => {
 
           <TouchableOpacity
             style={styles.chatButton}
-            onPress={() => handleChatPress(item.babáId)}
+            onPress={() => handleChatPress(item.babáId)} // Passa o babáId para o chat
           >
             <Icon name="comments" size={20} color="#FFF" />
           </TouchableOpacity>

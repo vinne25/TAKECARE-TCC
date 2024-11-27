@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useState, useEffect } from 'react';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Image } from 'react-native';
 
 // Telas de apresentação
 import Pesquisar from './screens/apres';
@@ -76,7 +76,23 @@ const StackRoutes = () => {
 
   // Se o usuário estiver logado, redireciona para as TabRoutes
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: true,
+        headerTitle: () => (
+          // Aqui você coloca a imagem que você deseja no cabeçalho
+          <Image
+            source={require('../../assets/Imagem/topologo3.png')} // Substitua pelo caminho correto da sua imagem
+            style={{
+              width: '100%',  // A largura será 100% da largura do cabeçalho
+              height: 60,     // Definindo uma altura fixa para a imagem
+              marginRight: -30,
+              resizeMode: 'contain', // A imagem será redimensionada para se ajustar dentro do espaço
+            }}
+          />
+        ),
+      }}
+    >
       <Stack.Screen
         name="TabRoutes"
         component={TabRoutes}
