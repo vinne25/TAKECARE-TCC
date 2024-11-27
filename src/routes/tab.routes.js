@@ -1,5 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MessageCircle, Heart, User, MapPin } from 'react-native-feather';
+import React from 'react';
+import { View, Text} from 'react-native';
 import Mapa from './screens/Mapa';
 import Favoritos from './screens/Favoritos';
 import Perfil from './screens/perfil';
@@ -9,11 +11,19 @@ import Chat from './screens/chat';
 const Tab = createBottomTabNavigator();
 
 const TabRoutes = ({ route }) => {
-  // Verifique se route.params e userType estão definidos
-  const userType = route?.params?.userType;
+  const { userType } = route.params || {}; // Usando desestruturação para acessar userType
+
+  if (!userType) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Carregando informações do usuário...</Text>
+      </View>
+    );
+  }
 
   return (
     <Tab.Navigator 
+      initialRouteName='MAPA'
       screenOptions={{
         tabBarActiveTintColor: '#0BBEE5', 
         tabBarInactiveTintColor: 'gray',
@@ -44,7 +54,7 @@ const TabRoutes = ({ route }) => {
       {userType === 'baba' ? (
         <Tab.Screen
           name="PERFIL"
-          component={PerfilUsuarios} // Tela de perfil para babá
+          component={Perfil} // Tela de perfil para babá
           options={{
             tabBarIcon: ({ color, size }) => <User stroke={color} width={size} height={size} />,
           }}
@@ -52,7 +62,7 @@ const TabRoutes = ({ route }) => {
       ) : (
         <Tab.Screen
           name="PERFIL"
-          component={Perfil} // Tela de perfil para usuário normal
+          component={PerfilUsuarios} // Tela de perfil para usuário normal
           options={{
             tabBarIcon: ({ color, size }) => <User stroke={color} width={size} height={size} />,
           }}
@@ -61,5 +71,6 @@ const TabRoutes = ({ route }) => {
     </Tab.Navigator>
   );
 };
+
 
 export default TabRoutes;
