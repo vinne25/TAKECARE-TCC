@@ -18,10 +18,18 @@ const FavoritosScreen = () => {
         .collection('Favoritos')
         .where('userId', '==', userId)
         .onSnapshot(querySnapshot => {
-          const favoritosList = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
+          const favoritosList = querySnapshot.docs.map(doc => {
+            const data = doc.data();
+            // Verificação para garantir que os campos estão definidos
+            if (data && data.babáId && data.name && data.profileImage) {
+              return {
+                id: doc.id,
+                ...data,
+              };
+            }
+            return null; // Se algum campo esperado não existir, não incluir no resultado
+          }).filter(item => item !== null); // Filtra os itens inválidos
+
           setFavoritos(favoritosList);
           setLoading(false);
         }, error => {
@@ -81,39 +89,51 @@ const FavoritosScreen = () => {
   };
 
   const handleChatPress = (babáId) => {
-    // Aqui vamos gerar um chatId único para o usuário e a babá
     const userId = auth().currentUser?.uid;
+    if (!userId || !babáId) {
+      console.error('Erro: userId ou babáId não definidos.');
+      return;
+    }
+
+    // Gerar chatId com base nos ids
     const chatId = userId < babáId ? `${userId}-${babáId}` : `${babáId}-${userId}`;
     
-    // Navega para a tela de chat e passa o chatId e babáId como parâmetros
+    // Navega para a tela de chat e passa os parâmetros
     navigation.navigate('CHAT', { chatId, babáId });
   };
 
-  const renderItem = ({ item }) => (
-    <View style={styles.card}>
-      <Image source={{ uri: item.imagem }} style={styles.image} />
-      <View style={styles.cardContent}>
-        <Text style={styles.name}>{item.nome}</Text>
-        <Text style={styles.valor}>R$ {item.valor}</Text>
-        <Text style={styles.avaliacao}>Avaliação: {item.avaliacao}⭐</Text>
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            style={styles.removeButton}
-            onPress={() => handleRemoveFavorite(item.babáId)}
-          >
-            <Icon name="trash" size={20} color="#FFF" />
-          </TouchableOpacity>
+  const renderItem = ({ item }) => {
+    // Verificação para garantir que os dados estão corretos
+    if (!item || !item.profileImage || !item.name || !item.valor || !item.babáId) {
+      return null; // Caso faltem dados, não renderiza o item
+    }
 
-          <TouchableOpacity
-            style={styles.chatButton}
-            onPress={() => handleChatPress(item.babáId)} // Passa o babáId para o chat
-          >
-            <Icon name="comments" size={20} color="#FFF" />
-          </TouchableOpacity>
+    return (
+      <View style={styles.card}>
+        <Image source={{ uri: item.profileImage }} style={styles.image} />
+        <View style={styles.cardContent}>
+          <Text style={styles.name}>{item.name}</Text>
+          <Text style={styles.valor}>R$ {item.valor}</Text>
+          <Text style={styles.avaliacao}>Avaliação: {item.avaliacao}⭐</Text>
+          <View style={styles.buttonsContainer}>
+            <TouchableOpacity
+              style={styles.removeButton}
+              onPress={() => handleRemoveFavorite(item.babáId)}
+            >
+              <Icon name="trash" size={20} color="#FFF" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.chatButton}
+              onPress={() => handleChatPress(item.babáId)} // Passa o babáId para o chat
+            >
+              <Icon name="comments" size={20} color="#FFF" />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   if (loading) {
     return (

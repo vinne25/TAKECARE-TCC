@@ -21,13 +21,13 @@ const App = () => {
       .onSnapshot(querySnapshot => {
         const locations = querySnapshot.docs.map(doc => ({
           id: doc.id,
-          nome: doc.data().nome,
+          name: doc.data().name,
           valor: doc.data().valor,
           avaliacao: doc.data().avaliacao,
           experiencia: doc.data().experiencia,
           descricao: doc.data().descricao,
           localidade: doc.data().localidade,
-          imagem: doc.data().imagem,
+          profileImage: doc.data().profileImage,
         }));
         setDados(locations);
         setLoading(false);
@@ -78,12 +78,12 @@ const App = () => {
             .add({
               userId: userId,
               babáId: babáId,
-              nome: selectedItem.nome,
+              name: selectedItem.name,
               valor: selectedItem.valor,
               avaliacao: selectedItem.avaliacao,
               experiencia: selectedItem.experiencia,
               descricao: selectedItem.descricao,
-              imagem: selectedItem.imagem,
+              profileImage: selectedItem.profileImage,
               localidade: selectedItem.localidade,
               criadoEm: firestore.FieldValue.serverTimestamp(),
             })
@@ -174,12 +174,12 @@ const App = () => {
       {selectedItem && (
         <View style={styles.cardContainer}>
           <Card
-            nome={selectedItem.nome}
+            name={selectedItem.name}
             valor={selectedItem.valor}
             avaliacao={selectedItem.avaliacao}
             experiencia={selectedItem.experiencia}
             descricao={selectedItem.descricao}
-            imagem={selectedItem.imagem}
+            profileImage={selectedItem.profileImage}
             onFavoritePress={handleFavoritePress}
             babáId={selectedItem.id} 
             formatExperiencia={formatExperiencia}
@@ -193,12 +193,12 @@ const App = () => {
   );
 };
 
-const Card = ({ nome, valor, avaliacao, experiencia, descricao, imagem, onFavoritePress, babáId, formatExperiencia, isFavorited, heartEmptySvg, heartFilledSvg }) => {
+const Card = ({ name, valor, avaliacao, experiencia, descricao, profileImage, onFavoritePress, babáId, formatExperiencia, isFavorited, heartEmptySvg, heartFilledSvg }) => {
   return (
     <View style={styles.card}>
-      <Image source={{ uri: imagem }} style={styles.image} />
+      <Image source={{ uri: profileImage }} style={styles.image} />
       <View style={styles.containerInformacoes}>
-        <Text style={styles.title}>{nome}</Text>
+        <Text style={styles.title}>{name}</Text>
         <Text style={styles.descricao}>
           {descricao ? descricao.substring(0, 100) + '...' : "Sem descrição disponível."}
         </Text>
@@ -207,7 +207,7 @@ const Card = ({ nome, valor, avaliacao, experiencia, descricao, imagem, onFavori
         </Text>
         <View style={styles.footer}>
           <Text style={styles.avaliacao}>
-            <Text style={styles.boldText}>Avaliação:</Text> {avaliacao}⭐
+            <Text style={styles.boldText}>Avaliação:</Text> {avaliacao}
           </Text>
           <Text style={styles.preco}>
             <Text style={styles.boldText}>R$:</Text> {valor}

@@ -93,7 +93,7 @@ const Chat = ({ route }) => {
         {/* Exibir a imagem do outro usuário em um círculo (só mostra para o outro usuário) */}
         {!isCurrentUser && (
           <Image 
-            source={{ uri: item.user.profileImage || 'https://firebasestorage.googleapis.com/v0/b/takecare-dfb73.appspot.com/o/image%2F313BJyoDZQdCrD4TAYxpfes0krw1?alt=media&token=9db7dd13-208b-431b-a241-05c7b0fbb57c' }}  // Foto do usuário ou imagem padrão
+            source={{ uri: item.user.profileImage || 'https://firebasestorage.googleapis.com/v0/b/takecare-dfb73.appspot.com/o/image%2FT0fJzhzj0BMHSoT6lWBncKgivPq1?alt=media&token=854871b3-3665-462b-baee-e5b29d4967ab' }}  // Foto do usuário ou imagem padrão
             style={styles.avatar}
           />
         )}
