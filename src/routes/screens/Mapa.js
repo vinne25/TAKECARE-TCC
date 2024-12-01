@@ -26,7 +26,7 @@ const App = () => {
           avaliacao: doc.data().avaliacao,
           experiencia: doc.data().experiencia,
           descricao: doc.data().descricao,
-          localidade: doc.data().localidade,
+          location: doc.data().location,
           imagem: doc.data().imagem,
         }));
         setDados(locations);
@@ -84,7 +84,7 @@ const App = () => {
               experiencia: selectedItem.experiencia,
               descricao: selectedItem.descricao,
               imagem: selectedItem.imagem,
-              localidade: selectedItem.localidade,
+              location: selectedItem.location,
               criadoEm: firestore.FieldValue.serverTimestamp(),
             })
             .then(() => {
