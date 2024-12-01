@@ -4,14 +4,16 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
 const Chat = ({ route }) => {
-  const { chatId, babáId } = route.params;  // Recebe os parâmetros passados
-
+  const { chatId: initialChatId, babáId } = route.params;  // Recebe os parâmetros passados
+  const [chatId, setChatId] = useState(initialChatId || '');  // Declara corretamente o estado chatId
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [user, setUser] = useState(null); // Usuário logado
   const [userProfileImage, setUserProfileImage] = useState(''); // Imagem de perfil do usuário
   const [babáProfileImage, setBabáProfileImage] = useState(''); // Imagem de perfil da babá
   const flatListRef = useRef(); // Referência para o FlatList
+
+  const defaultProfileImage = 'https://www.example.com/default-image.jpg';  // Imagem de fallback
 
   // Obter o usuário logado
   useEffect(() => {
@@ -28,27 +30,99 @@ const Chat = ({ route }) => {
         .then((doc) => {
           if (doc.exists) {
             const userData = doc.data();
-            setUserProfileImage(userData.profileImage); // Pega a URL da imagem de perfil
+            setUserProfileImage(userData.profileImage || defaultProfileImage); // Pega a URL da imagem de perfil
           }
         });
     }
   }, [babáId]);
 
+  // Buscar a imagem de perfil da babá (ou outro participante)
+  useEffect(() => {
+    if (babáId && babáId !== user?.uid) {
+      firestore()
+        .collection('babas') // Assumindo que você tem uma coleção para babás
+        .doc(babáId)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            const babáData = doc.data();
+            setBabáProfileImage(babáData.profileImage || defaultProfileImage); // Pega a URL da imagem de perfil da babá
+          }
+        });
+    }
+  }, [babáId, user]);
+
+  // Função para criar um chat se ele não existir
+  const createChat = async (userId1, userId2) => {
+    const chatRef = firestore().collection('chats').doc(); // Cria um novo documento com ID gerado automaticamente
+
+    // Criar o documento do chat com os campos 'users' e 'lastMessage'
+    await chatRef.set({
+      users: [userId1, userId2], // IDs dos usuários envolvidos
+      lastMessage: 'Início do chat', // Última mensagem (mensagem padrão no início)
+      createdAt: firestore.FieldValue.serverTimestamp(), // Timestamp de criação
+    });
+
+    // Criar a subcoleção 'messages' (inicia com a primeira mensagem)
+    await chatRef.collection('messages').add({
+      text: 'Início do chat', // Mensagem inicial
+      senderId: userId1, // ID do remetente
+      createdAt: firestore.FieldValue.serverTimestamp(), // Timestamp da mensagem
+    });
+
+    console.log('Chat criado com sucesso!');
+    return chatRef.id;  // Retorna o chatId
+  };
+
+  // Função para buscar ou criar um chat
+  const getChatId = async () => {
+    if (chatId) {
+      return chatId;  // Se o chatId já for passado, retorna ele
+    }
+
+    // Se não existe um chatId, cria um novo chat
+    const chatRef = await firestore()
+      .collection('chats')
+      .where('users', 'array-contains', user.uid)  // Verifica se o usuário já tem um chat com a babá
+      .where('users', 'array-contains', babáId)
+      .get();
+
+    if (!chatRef.empty) {
+      // Se encontrar o chat, retorna o ID do chat existente
+      return chatRef.docs[0].id;
+    } else {
+      // Se não encontrar, cria um novo chat
+      return await createChat(user.uid, babáId);
+    }
+  };
+
   // Buscar as mensagens do Firestore, agora ordenadas de forma crescente (mais antigas primeiro)
   useEffect(() => {
-    if (chatId) {
+    const fetchChat = async () => {
+      const chatIdFromDb = await getChatId(); // Busca ou cria o chat
+      setChatId(chatIdFromDb); // Atualiza o estado com o chatId
+
       const unsubscribe = firestore()
         .collection('chats')
-        .doc(chatId)  // Usando chatId
+        .doc(chatIdFromDb)  // Usando chatId
         .collection('messages')
         .orderBy('createdAt', 'asc')  // Ordenando por data, mais recentes primeiro
         .onSnapshot((querySnapshot) => {
-          const messagesFirestore = querySnapshot.docs.map((doc) => doc.data());
+          const messagesFirestore = querySnapshot.docs.map((doc) => {
+            const message = doc.data();
+            // Se 'createdAt' for nulo ou indefinido, define o timestamp atual
+            if (!message.createdAt) {
+              message.createdAt = firestore.FieldValue.serverTimestamp();  // Adiciona o timestamp atual
+            }
+            return message;
+          });
           setMessages(messagesFirestore);
         });
 
       return () => unsubscribe();
-    }
+    };
+
+    fetchChat();
   }, [chatId]);
 
   // Enviar mensagem
@@ -57,8 +131,12 @@ const Chat = ({ route }) => {
 
     const newMessage = {
       text: inputText,
-      createdAt: new Date(),
-      user: { id: user.uid, name: user.displayName || 'Você', profileImage: userProfileImage }, // Inclui a foto do usuário
+      createdAt: firestore.FieldValue.serverTimestamp(),  // Usando o timestamp do Firestore
+      user: { 
+        id: user.uid, 
+        name: user.displayName || 'Você', 
+        profileImage: userProfileImage || defaultProfileImage  // Usa a imagem do usuário ou a imagem padrão
+      }, // Inclui a foto do usuário
     };
 
     await firestore()
@@ -67,11 +145,21 @@ const Chat = ({ route }) => {
       .collection('messages')
       .add(newMessage);
 
+    // Atualizar o campo 'lastMessage' no documento do chat
+    await firestore()
+      .collection('chats')
+      .doc(chatId)
+      .update({
+        lastMessage: inputText,
+        createdAt: firestore.FieldValue.serverTimestamp(), // Atualiza a data de criação
+      });
+
     setInputText('');  // Limpa o campo de texto após enviar a mensagem
   };
 
   // Função para formatar a hora da mensagem
   const formatTime = (date) => {
+    if (!date) return 'Indefinido';  // Caso o timestamp não seja válido
     const hours = date.getHours();
     const minutes = date.getMinutes();
     return `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
@@ -80,12 +168,14 @@ const Chat = ({ route }) => {
   // Renderizar cada item (mensagem)
   const renderMessageItem = ({ item }) => {
     const isCurrentUser = item.user.id === user.uid;  // Verifica se a mensagem é do usuário logado
-    const messageTime = formatTime(item.createdAt.toDate()); // Formata o horário da mensagem
+    
+    // Verifica se createdAt existe e é um Timestamp válido
+    const messageTime = item.createdAt && item.createdAt.toDate ? formatTime(item.createdAt.toDate()) : 'Indefinido';
 
     return (
       <View 
-        style={[
-          styles.messageContainer,
+        style={[ 
+          styles.messageContainer, 
           { alignSelf: isCurrentUser ? 'flex-end' : 'flex-start' },  // Alinha à direita para o usuário logado, esquerda para o outro
           isCurrentUser ? styles.currentUserMessage : styles.otherUserMessage  // Estilos diferentes para cada usuário
         ]}
@@ -93,7 +183,7 @@ const Chat = ({ route }) => {
         {/* Exibir a imagem do outro usuário em um círculo (só mostra para o outro usuário) */}
         {!isCurrentUser && (
           <Image 
-            source={{ uri: item.user.profileImage || 'https://firebasestorage.googleapis.com/v0/b/takecare-dfb73.appspot.com/o/image%2FT0fJzhzj0BMHSoT6lWBncKgivPq1?alt=media&token=854871b3-3665-462b-baee-e5b29d4967ab' }}  // Foto do usuário ou imagem padrão
+            source={{ uri: babáProfileImage || defaultProfileImage }}  // Foto do outro usuário ou imagem padrão
             style={styles.avatar}
           />
         )}
@@ -158,23 +248,23 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderRadius: 8,
     alignItems: 'flex-start',
-    flexShrink: 1,  // O balão vai se ajustar ao tamanho do texto
-    paddingHorizontal: 10, // Adicionando algum padding para melhorar a estética
-    minWidth: 50, // Largura mínima para não ficar muito pequeno
-    maxWidth: '80%', // Limitar a largura do balão, mas sem ser 80% fixo
+    flexShrink: 1,
+    paddingHorizontal: 10,
+    minWidth: 50,
+    maxWidth: '80%',
   },
   currentUserMessage: {
-    backgroundColor: '#a7d7e6', // Cor de fundo para mensagens do usuário logado
+    backgroundColor: '#a7d7e6',
     borderBottomRightRadius: 0,
   },
   otherUserMessage: {
-    backgroundColor: '#E6E6E6', // Cor de fundo para mensagens do outro usuário
+    backgroundColor: '#E6E6E6',
     borderBottomLeftRadius: 0,
   },
   avatar: {
     width: 40,
     height: 40,
-    borderRadius: 20,  // Tornando a imagem circular
+    borderRadius: 20,
     marginRight: 10,
   },
   textContainer: {
@@ -191,9 +281,9 @@ const styles = StyleSheet.create({
   messageTime: {
     fontSize: 12,
     color: '#666',
-    alignSelf: 'flex-end',  // Hora sempre no final da mensagem
+    alignSelf: 'flex-end',
     marginTop: 5,
-    marginLeft: 10,  // Separação entre o texto e o horário
+    marginLeft: 10,
   },
   inputContainer: {
     flexDirection: 'row',
