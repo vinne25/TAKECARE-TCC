@@ -26,8 +26,8 @@ const App = () => {
           avaliacao: doc.data().avaliacao,
           experiencia: doc.data().experiencia,
           descricao: doc.data().descricao,
-          localidade: doc.data().localidade,
-          imagem: doc.data().imagem,
+          location: doc.data().location,
+          profileImage: doc.data().profileImage,
         }));
         setDados(locations);
         setLoading(false);
@@ -83,8 +83,8 @@ const App = () => {
               avaliacao: selectedItem.avaliacao,
               experiencia: selectedItem.experiencia,
               descricao: selectedItem.descricao,
-              imagem: selectedItem.imagem,
-              localidade: selectedItem.localidade,
+              profileImage: selectedItem.profileImage,
+              location: selectedItem.location,
               criadoEm: firestore.FieldValue.serverTimestamp(),
             })
             .then(() => {
@@ -156,12 +156,12 @@ const App = () => {
         }}
       >
         {dados.map(item => (
-          item.localidade?.latitude && item.localidade?.longitude && (
+          item.location?.latitude && item.location?.longitude && (
             <Marker
               key={item.id}
               coordinate={{
-                latitude: item.localidade.latitude,
-                longitude: item.localidade.longitude,
+                latitude: item.location.latitude,
+                longitude: item.location.longitude,
               }}
               onPress={() => handleMarkerPress(item)}
               icon={logomarker} 
@@ -179,7 +179,7 @@ const App = () => {
             avaliacao={selectedItem.avaliacao}
             experiencia={selectedItem.experiencia}
             descricao={selectedItem.descricao}
-            imagem={selectedItem.imagem}
+            profileImage={selectedItem.profileImage}
             onFavoritePress={handleFavoritePress}
             babáId={selectedItem.id} 
             formatExperiencia={formatExperiencia}
@@ -193,10 +193,10 @@ const App = () => {
   );
 };
 
-const Card = ({ nome, valor, avaliacao, experiencia, descricao, imagem, onFavoritePress, babáId, formatExperiencia, isFavorited, heartEmptySvg, heartFilledSvg }) => {
+const Card = ({ nome, valor, avaliacao, experiencia, descricao, profileImage, onFavoritePress, babáId, formatExperiencia, isFavorited, heartEmptySvg, heartFilledSvg }) => {
   return (
     <View style={styles.card}>
-      <Image source={{ uri: imagem }} style={styles.image} />
+      <Image source={{ uri: profileImage }} style={styles.image} />
       <View style={styles.containerInformacoes}>
         <Text style={styles.title}>{nome}</Text>
         <Text style={styles.descricao}>
