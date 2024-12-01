@@ -27,7 +27,7 @@ const App = () => {
           experiencia: doc.data().experiencia,
           descricao: doc.data().descricao,
           localidade: doc.data().localidade,
-          profileImage: doc.data().profileImage,
+          imagem: doc.data().imagem,
         }));
         setDados(locations);
         setLoading(false);
@@ -83,7 +83,7 @@ const App = () => {
               avaliacao: selectedItem.avaliacao,
               experiencia: selectedItem.experiencia,
               descricao: selectedItem.descricao,
-              profileImage: selectedItem.profileImage,
+              imagem: selectedItem.imagem,
               localidade: selectedItem.localidade,
               criadoEm: firestore.FieldValue.serverTimestamp(),
             })
@@ -156,12 +156,12 @@ const App = () => {
         }}
       >
         {dados.map(item => (
-          item.localidade?.latitude && item.localidade?.longitude && (
+          item.location?.latitude && item.location?.longitude && (
             <Marker
               key={item.id}
               coordinate={{
-                latitude: item.localidade.latitude,
-                longitude: item.localidade.longitude,
+                latitude: item.location.latitude,
+                longitude: item.location.longitude,
               }}
               onPress={() => handleMarkerPress(item)}
               icon={logomarker} 
@@ -193,7 +193,7 @@ const App = () => {
   );
 };
 
-const Card = ({ name, valor, avaliacao, experiencia, descricao, profileImage, onFavoritePress, babáId, formatExperiencia, isFavorited, heartEmptySvg, heartFilledSvg }) => {
+const Card = ({ nome, valor, avaliacao, experiencia, descricao, imagem, onFavoritePress, babáId, formatExperiencia, isFavorited, heartEmptySvg, heartFilledSvg }) => {
   return (
     <View style={styles.card}>
       <Image source={{ uri: profileImage }} style={styles.image} />
