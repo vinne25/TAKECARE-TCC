@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 const InboxScreen = () => {
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userProfiles, setUserProfiles] = useState({});
   const navigation = useNavigation();
   const userId = auth().currentUser?.uid;
 
@@ -22,9 +23,9 @@ const InboxScreen = () => {
               const chatList = querySnapshot.docs.map(doc => ({
                 id: doc.id,
                 lastMessage: doc.data().lastMessage || 'Sem mensagens ainda',
+                users: doc.data().users,
                 ...doc.data(),
               }));
-              console.log('Chats carregados', chatList); // Log de debug
               setChats(chatList);
             } else {
               setChats([]); // Se não houver chats
@@ -32,7 +33,7 @@ const InboxScreen = () => {
             setLoading(false);
           },
           error => {
-            console.error('Erro ao carregar chats', error); // Log de erro
+            console.error('Erro ao carregar chats', error);
             setLoading(false);
           }
         );
@@ -41,12 +42,38 @@ const InboxScreen = () => {
     }
   }, [userId]);
 
+  // Buscar o perfil dos usuários de cada chat
+  useEffect(() => {
+    if (chats.length > 0) {
+      const userIds = chats.flatMap(chat => chat.users).filter(id => id !== userId);
+      const uniqueUserIds = [...new Set(userIds)];
+
+      uniqueUserIds.forEach(otherUserId => {
+        // Aqui você pode buscar diretamente nas coleções de 'babas' ou 'usuarios' dependendo do tipo de usuário
+        firestore()
+          .collection('Babas')  // Ou 'Usuarios' dependendo da sua estrutura de dados
+          .doc(otherUserId)
+          .get()
+          .then(doc => {
+            if (doc.exists) {
+              setUserProfiles(prev => ({
+                ...prev,
+                [otherUserId]: doc.data(),
+              }));
+            }
+          })
+          .catch(error => console.error('Erro ao carregar perfil do usuário', error));
+      });
+    }
+  }, [chats, userId]);
+
   const handleChatSelect = (chatId, otherUserId) => {
     navigation.navigate('CHAT', { chatId, babáId: otherUserId });
   };
 
   const renderItem = useCallback(({ item }) => {
     const otherUserId = item.users.find(id => id !== userId);
+    const otherUserProfile = userProfiles[otherUserId];
 
     return (
       <TouchableOpacity
@@ -56,19 +83,19 @@ const InboxScreen = () => {
       >
         <Image
           source={
-            item.profileImage
-              ? { uri: item.profileImage }
-              : require('../../../assets/Imagem/logotk.png')
+            otherUserProfile?.profileImage
+              ? { uri: otherUserProfile.profileImage }
+              : require('../../../assets/Imagem/logotk.png') // Imagem de fallback
           }
           style={styles.avatar}
         />
         <View style={styles.chatContent}>
-          <Text style={styles.chatName}>Usuário {otherUserId}</Text>
+          <Text style={styles.chatName}>{otherUserProfile?.name || `Usuário ${otherUserId}`}</Text>
           <Text style={styles.chatLastMessage}>{item.lastMessage}</Text>
         </View>
       </TouchableOpacity>
     );
-  }, [userId, handleChatSelect]);
+  }, [userId, userProfiles]);
 
   if (loading) {
     return <Text>Carregando...</Text>;
