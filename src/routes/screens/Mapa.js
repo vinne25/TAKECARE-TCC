@@ -27,7 +27,7 @@ const App = () => {
           experiencia: doc.data().experiencia,
           descricao: doc.data().descricao,
           location: doc.data().location,
-          imagem: doc.data().imagem,
+          profileImage: doc.data().profileImage,
         }));
         setDados(locations);
         setLoading(false);
@@ -83,7 +83,7 @@ const App = () => {
               avaliacao: selectedItem.avaliacao,
               experiencia: selectedItem.experiencia,
               descricao: selectedItem.descricao,
-              imagem: selectedItem.imagem,
+              profileImage: selectedItem.profileImage,
               location: selectedItem.location,
               criadoEm: firestore.FieldValue.serverTimestamp(),
             })
@@ -193,12 +193,12 @@ const App = () => {
   );
 };
 
-const Card = ({ nome, valor, avaliacao, experiencia, descricao, imagem, onFavoritePress, babáId, formatExperiencia, isFavorited, heartEmptySvg, heartFilledSvg }) => {
+const Card = ({ nome, valor, avaliacao, experiencia, descricao, profileImage, onFavoritePress, babáId, formatExperiencia, isFavorited, heartEmptySvg, heartFilledSvg }) => {
   return (
     <View style={styles.card}>
       <Image source={{ uri: profileImage }} style={styles.image} />
       <View style={styles.containerInformacoes}>
-        <Text style={styles.title}>{name}</Text>
+        <Text style={styles.title}>{nome}</Text>
         <Text style={styles.descricao}>
           {descricao ? descricao.substring(0, 100) + '...' : "Sem descrição disponível."}
         </Text>

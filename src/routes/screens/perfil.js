@@ -4,7 +4,7 @@ import { getFirestore, doc, getDoc, updateDoc } from '@react-native-firebase/fir
 import { getAuth } from '@react-native-firebase/auth';
 import { getStorage, ref, uploadBytes, getDownloadURL } from '@react-native-firebase/storage';
 import { launchImageLibrary } from 'react-native-image-picker';
-import { AlignRight } from 'react-native-feather';
+
 
 const Perfil = () => {
   const [userData, setUserData] = useState({});
@@ -115,8 +115,7 @@ const Perfil = () => {
   
     fetchUserData();
   }, [user]);
-  
-  
+
 
   const handleImagePick = () => {
     launchImageLibrary({ mediaType: 'photo' }, async (response) => {
@@ -127,22 +126,22 @@ const Perfil = () => {
         Alert.alert('Erro', 'Erro ao carregar imagem.');
         return;
       }
-
+  
       try {
         const pickedUri = response.assets[0].uri;
         setImageUri(pickedUri);
-
+  
         // Converte a URI para blob
         const img = await fetch(pickedUri);
         const blob = await img.blob();
-
+  
         // Define o caminho com a pasta "imagens" e armazena a foto de perfil
         const imageRef = ref(storage, `image/${user.uid}`);
-        await uploadBytes(imageRef, blob);
-
+        await imageRef.put(blob); // Usa `put` para enviar o blob
+        
         // Obtém a URL de download
         const downloadUrl = await getDownloadURL(imageRef);
-
+        
         // Atualiza o URL da imagem no Firestore
         await updateDoc(doc(db, 'Babas', user.uid), { profileImage: downloadUrl });
         Alert.alert('Sucesso', 'Imagem de perfil atualizada!');

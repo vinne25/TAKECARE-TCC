@@ -88,19 +88,33 @@ const FavoritosScreen = () => {
     );
   };
 
-  const handleChatPress = (babáId) => {
-    const userId = auth().currentUser?.uid;
-    if (!userId || !babáId) {
-      console.error('Erro: userId ou babáId não definidos.');
-      return;
-    }
+  // Restante do código permanece o mesmo
+const handleChatPress = async (babáId) => {
+  const userId = auth().currentUser?.uid;
+  if (!userId || !babáId) {
+    console.error('Erro: userId ou babáId não definidos.');
+    return;
+  }
 
-    // Gerar chatId com base nos ids
-    const chatId = userId < babáId ? `${userId}-${babáId}` : `${babáId}-${userId}`;
-    
-    // Navega para a tela de chat e passa os parâmetros
-    navigation.navigate('CHAT', { chatId, babáId });
-  };
+  // Gerar chatId com base nos ids
+  const chatId = userId < babáId ? `${userId}-${babáId}` : `${babáId}-${userId}`;
+
+  // Verificar ou criar o chat no Firestore
+  const chatRef = firestore().collection('chats').doc(chatId);
+  const chatDoc = await chatRef.get();
+
+  if (!chatDoc.exists) {
+    await chatRef.set({
+      users: [userId, babáId],
+      lastMessage: '',
+      createdAt: firestore.FieldValue.serverTimestamp(),
+    });
+  }
+
+  // Navega para a tela de chat
+  navigation.navigate('CHAT', { chatId, babáId });
+};
+
 
   const renderItem = ({ item }) => {
     // Verificação para garantir que os dados estão corretos
