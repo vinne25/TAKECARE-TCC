@@ -119,22 +119,24 @@ const Cadastro = ({navigation}) => {
       Alert.alert('Erro', 'Preencha todos os campos e verifique o CEP.');
       return;
     }
-
+  
     if (password !== confirmPassword) {
       Alert.alert('Erro', 'As senhas não correspondem.');
       return;
     }
-
+  
     setLoading(true);
     try {
+      // Criação do usuário no Firebase Authentication
       const userCredential = await auth().createUserWithEmailAndPassword(
         email,
-        password,
+        password
       );
       const uid = userCredential.user.uid;
-
+  
       const collectionName = isBaba ? 'Babas' : 'Usuarios';
-
+  
+      // Armazenamento dos dados do usuário no Firestore
       await firestore()
         .collection(collectionName)
         .doc(uid)
@@ -153,15 +155,19 @@ const Cadastro = ({navigation}) => {
           location: new firestore.GeoPoint(Number(latitude), Number(longitude)), // Adicionando o GeoPoint
           createdAt: firestore.FieldValue.serverTimestamp(),
         });
-
+  
       setLoading(false);
       Alert.alert('Sucesso', 'Usuário registrado com sucesso!');
-      navigation.navigate('MAPA');
+      
+      // Navegação só após o cadastro ser concluído
+      navigation.navigate('TabRoutes', { screen: 'MAPA' });
+
     } catch (error) {
       setLoading(false);
       handleFirebaseError(error);
     }
   };
+  
 
   const handleFirebaseError = error => {
     if (error.code === 'auth/email-already-in-use') {

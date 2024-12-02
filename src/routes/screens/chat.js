@@ -134,7 +134,7 @@ const Chat = ({ route }) => {
       createdAt: firestore.FieldValue.serverTimestamp(),  // Usando o timestamp do Firestore
       user: { 
         id: user.uid, 
-        name: user.displayName || 'Você', 
+        name: user.displayName, 
         profileImage: userProfileImage || defaultProfileImage  // Usa a imagem do usuário ou a imagem padrão
       }, // Inclui a foto do usuário
     };

@@ -7,6 +7,8 @@ import Favoritos from './screens/Favoritos';
 import Perfil from './screens/perfil';
 import PerfilUsuarios from './screens/perfilUsuario';
 import Chat from './screens/chat';
+import InboxRoutes from './inbox.routes';
+import InboxScreen from './screens/inbox';
 
 const Tab = createBottomTabNavigator();
 
@@ -45,8 +47,8 @@ const TabRoutes = ({ route }) => {
         }}
       />
       <Tab.Screen
-        name="CHAT"
-        component={Chat}
+        name="INBOX"
+        component={InboxRoutes}
         options={{
           tabBarIcon: ({ color, size }) => <MessageCircle stroke={color} width={size} height={size} />,
         }}
